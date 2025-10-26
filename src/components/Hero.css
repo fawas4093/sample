@@ -1,0 +1,281 @@
+/* ======================================
+   Hero Section with Advanced Carousel
+   ====================================== */
+.hero {
+    position: relative;
+    min-height: 650px;
+    background: linear-gradient(135deg, #8b7355, #a68968);
+    overflow: hidden;
+    transition: background 1s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: 80px;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    min-height: 650px;
+    position: relative;
+}
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.slides-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-model-image {
+    position: absolute;
+    /* max-width: 100%;
+    max-height: 100%; */
+    width: 100;
+    height: 50;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    filter: brightness(1.1) contrast(1.05);
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+.hero-model-image.active {
+    opacity: 1;
+    transform: translateX(0%) scale(1);
+    filter: brightness(1.1) contrast(1.05) drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+}
+
+.hero-text {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px;
+}
+
+.offer-card {
+    text-align: center;
+    color: white;
+    max-width: 480px;
+}
+
+.offer-title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 0.85;
+    margin-bottom: 8px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.offer-subtitle {
+    font-size: 4.5rem;
+    font-weight: 900;
+    line-height: 0.85;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-80px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(80px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.offer-code {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.shop-now-btn {
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    color: #333;
+    border: none;
+    padding: 18px 45px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 12px;
+    animation: bounceInUp 1s ease-out 0.6s both;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+@keyframes bounceInUp {
+    0% { opacity: 0; transform: translateY(100px) scale(0.8); }
+    60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+    80% { transform: translateY(5px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.shop-now-btn:hover {
+    background: linear-gradient(135deg, #f8f8f8, #e0e0e0);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.offer-terms {
+    font-size: 16px;
+    opacity: 0.9;
+    animation: fadeIn 0.8s ease-out 0.8s both;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Navigation Arrows */
+.hero-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 18px;
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: 50%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.hero-nav:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.hero-nav.prev { left: 30px; }
+.hero-nav.next { right: 30px; }
+
+/* Slide Indicators */
+.slide-indicators {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+.indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.indicator.active {
+    background-color: white;
+    transform: scale(1.4);
+    border-color: white;
+    box-shadow: 0 0 15px rgba(255,255,255,0.6);
+}
+
+.indicator:hover { transform: scale(1.2); }
+
+.indicator.error {
+    background-color: red !important;
+    border: 2px solid darkred;
+}
+
+/* Progress Bar */
+.slide-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.2),
+        rgba(255,255,255,0.3),
+        rgba(255,255,255,0.2)
+    );
+    z-index: 10;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff, #f8f8f8);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* =========================
+   Responsive Adjustments
+   ========================= */
+@media (max-width: 1024px) {
+    .hero-text { padding: 30px 25px; }
+    .offer-title,
+    .offer-subtitle { font-size: 3.8rem; line-height: 0.8; }
+    .offer-code { margin-bottom: 18px; }
+    .shop-now-btn { margin-bottom: 10px; }
+    .slide-indicators { bottom: 45px; }
+    .hero-nav { padding: 15px; font-size: 20px; }
+    .slides-container { height: 450px; }
+    
+}
+
+@media (max-width: 768px) {
+    .hero-content { flex-direction: column; text-align: center; min-height: 600px; }
+    .hero-image { order: 1; padding: 25px; min-height: 380px; }
+    .slides-container { height: 380px; }
+    .hero-text { order: 2; padding: 15px 20px; }
+    .offer-title, .offer-subtitle { font-size: 3rem; }
+    .hero-nav { display: none; }
+    .slide-indicators { bottom: 60px !important; gap: 12px; }
+}
+
+@media (max-width: 480px) {
+    .hero { min-height: 550px; padding-bottom: 120px; }
+    .hero-content { min-height: 550px; }
+    .hero-image { padding: 20px; min-height: 320px; }
+    .slides-container { height: 320px; }
+    .offer-title, .offer-subtitle { font-size: 2.5rem; line-height: 0.75; margin-bottom: 4px; }
+    .shop-now-btn { padding: 15px 35px; font-size: 16px; margin-bottom: 6px; }
+    .slide-indicators { bottom: 80px !important; gap: 10px; }
+    .slide-progress { height: 4px; }
+}

@@ -1,0 +1,166 @@
+/* Breadcrumb */
+.page-product-details .breadcrumb {
+display: flex;
+gap: 8px;
+align-items: center;
+color: #6b6b6b;
+margin: 18px 0 10px;
+}
+
+.page-product-details .breadcrumb a {
+text-decoration: none;
+color: #2c1810;
+}
+
+.page-product-details .breadcrumb a:hover {
+text-decoration: underline;
+}
+
+/* Layout */
+.page-product-details .details-layout {
+display: grid;
+grid-template-columns: 1.2fr 1fr 1.2fr;
+gap: 24px;
+}
+
+/* Left: Media */
+.media-block .hero-img {
+border: 1px solid #eee;
+border-radius: 12px;
+overflow: hidden;
+aspect-ratio: 4/3;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #fafafa;
+}
+
+.media-block .hero-img img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+.media-block .thumbs {
+display: flex;
+gap: 10px;
+margin-top: 12px;
+flex-wrap: wrap;
+}
+
+.media-block .thumb-btn {
+padding: 0;
+border: 1px solid #eee;
+border-radius: 8px;
+background: #fff;
+overflow: hidden;
+cursor: pointer;
+}
+
+.media-block .thumb-btn img {
+width: 80px;
+height: 80px;
+object-fit: cover;
+display: block;
+}
+
+/* Middle: Highlights */
+.highlights-block h3 {
+margin-bottom: 12px;
+}
+
+.highlight-list {
+display: grid;
+gap: 12px;
+}
+
+.highlight-item {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.highlight-item .icon {
+width: 42px;
+height: 42px;
+border-radius: 999px;
+background: #f7f2e6;
+display: inline-block;
+}
+
+.highlight-item .icon.purity { background: #f4ead6; }
+.highlight-item .icon.legacy { background: #e9e2d3; }
+.highlight-item .icon.aesthetic { background: #f1e6d6; }
+
+.highlights-block .enquire-btn {
+margin-top: 16px;
+}
+
+/* Right: Specs */
+.specs-block h3 {
+margin-bottom: 12px;
+}
+
+.specs-block .spec-list {
+list-style: none;
+padding: 0;
+margin: 0;
+display: grid;
+gap: 8px;
+}
+
+.specs-block .spec-list li {
+display: grid;
+grid-template-columns: 140px 1fr;
+gap: 6px;
+align-items: baseline;
+}
+
+.specs-block .spec-list li span:first-child {
+color: #7a6a5d;
+font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+background: #2c1810;
+color: #fff;
+padding: 10px 12px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: background .25s ease, transform .1s ease;
+}
+
+.btn-primary:hover {
+background: #4a2c1a;
+}
+
+.btn-primary:active {
+transform: scale(.98);
+}
+
+.btn-primary.outline {
+background: transparent;
+color: #2c1810;
+border: 2px solid #2c1810;
+}
+
+.btn-primary.outline:hover {
+background: #2c1810;
+color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+.page-product-details .details-layout {
+grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 480px) {
+.media-block .thumb-btn img {
+width: 68px;
+height: 68px;
+}
+}

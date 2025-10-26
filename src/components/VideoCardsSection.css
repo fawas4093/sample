@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap');
+
+.video-section {
+  padding: 60px 20px;
+  text-align: center;
+  background: #fff;
+}
+
+/* Titles */
+.video-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #000;
+}
+.video-subtitle {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 40px;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Cards container with snap scrolling (desktop/tablet) */
+.video-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* momentum on iOS */
+  scroll-snap-type: x mandatory;     /* snap behavior */
+  padding-bottom: 6px;               /* avoid iOS cut-off */
+  scrollbar-width: none;             /* Firefox hide */
+}
+.video-cards::-webkit-scrollbar {
+  display: none;                     /* Chrome/Safari hide */
+}
+
+/* Card with sharp edges */
+.video-card {
+  flex: 0 0 300px;
+  background: #fff;
+  border-radius: 0;                  /* sharp edges: no radius */
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+  color: #000;
+  scroll-snap-align: start;          /* snap each card */
+  scroll-snap-stop: always;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Video also sharp-edged */
+.video-card video {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 0; /* remove rounding */
+}
+
+/* Text row */
+.video-card-text {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.video-card-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #000;
+}
+
+.video-card-text .arrow {
+  font-size: 20px;
+  color: #850000;
+  font-weight: bold;
+}
+
+/* Responsive tweaks: stack vertically on mobile */
+@media (max-width: 767px) {
+  .video-cards {
+    display: flex;                 /* keep flex container */
+    flex-direction: column;        /* stack vertically */
+    gap: 16px;                     /* tighter spacing on mobile */
+    padding: 0 12px 8px;           /* comfortable side gutters */
+    overflow-x: visible;           /* remove horizontal scroll */
+    overflow-y: visible;           /* normal page scroll */
+    scroll-snap-type: none;        /* disable horizontal snap */
+  }
+
+  .video-card {
+    flex: 0 0 auto;                /* height via content */
+    width: 100%;                   /* full width */
+    max-width: 100%;               /* ensure no overflow */
+    scroll-snap-align: unset;      /* no snap in column mode */
+    scroll-snap-stop: normal;
+  }
+
+  .video-card video {
+    width: 100%;
+    height: 400px;                 /* shorter to fit mobile */
+    object-fit: cover;
+  }
+}

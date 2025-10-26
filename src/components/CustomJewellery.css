@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap');
+
+.custom-jewellery {
+  background-color: #c5bfbf;
+  padding: 60px 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.video-container {
+  flex: 1;
+  max-width: 500px;
+}
+
+.video-container video {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  object-fit: cover;
+  /* 🚫 Removed box-shadow */
+}
+
+.text-container {
+  flex: 1;
+  max-width: 600px;
+}
+
+.text-container h2 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.text-container p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.cta-btn {
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cta-btn:hover {
+  background: #333;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .video-container {
+    order: 1;
+  }
+
+  .text-container {
+    order: 2;
+    text-align: center;
+  }
+
+  .text-container h2 {
+    font-size: 28px;
+  }
+}

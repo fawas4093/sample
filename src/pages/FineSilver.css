@@ -1,0 +1,331 @@
+/* ========== Common ========== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+h2, h3 {
+  margin-bottom: 10px;
+  color: #643030;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #7f4c4c;
+  margin-top: 1rem;
+}
+
+.btn-primary.outline.full-width {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 12px;
+  background: #fff;
+  border: 1.5px solid #3b2b2b;
+  color: #3b2b2b;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary.outline.full-width:hover {
+  background: #3b2b2b;
+  color: #fff;
+}
+
+/* ========== Buttons ========== */
+.btn-primary {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-top: 10px;
+  background: #444;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #222;
+}
+
+.btn-primary.outline {
+  background: transparent;
+  border: 1px solid #444;
+  color: #444;
+}
+
+.btn-primary.outline:hover {
+  background: #444;
+  color: #fff;
+}
+
+/* ========== Product Grid (Listing Page) ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card .thumb img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.card .info {
+  padding: 15px;
+}
+
+/* ========== Breadcrumb ========== */
+.breadcrumb {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.breadcrumb a {
+  color: #4a1c1c;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: #333;
+  margin: 0 5px;
+}
+
+/* ========== Product Details Page ========== */
+.detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.detail-image {
+  flex: 1 1 40%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+  cursor: zoom-in;
+}
+
+.detail-image img.zoomed {
+  transform: scale(1.8);
+  cursor: zoom-out;
+}
+
+.detail-info {
+  flex: 1 1 55%;
+}
+
+.detail-info h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Highlights + Specs side by side */
+.info-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.highlights {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.highlights li {
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.highlights li::before {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #f7f1e5;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+}
+
+.specs {
+  flex: 2;
+}
+
+.specs p {
+  margin: 0.3rem 0;
+}
+
+/* Enquire Now button */
+.btn-enquire {
+  display: inline-block;
+  padding: 10px 18px;
+  margin-top: 15px;
+  background: #3b2b2b;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-enquire:hover {
+  background: #1f1414;
+}
+
+/* ================= Tablets / Small Screens (600px - 1024px) ================= */
+@media (max-width: 1024px) and (min-width: 600px) {
+  /* Grid: 2 cards per row for listing page */
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  /* Product details layout: stack image + info */
+  .detail-container {
+    flex-direction: column; /* image on top, info below */
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .detail-info {
+    width: 100%; /* take full width under image */
+  }
+
+  /* Highlights, specs, button order */
+  .info-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .highlights {
+    order: 1;
+  }
+
+  .specs {
+    order: 2;
+  }
+
+  .btn-enquire {
+    order: 3;
+    align-self: center;
+    margin-top: 10px;
+    width: auto; /* adjust width if needed */
+  }
+
+  /* Specs inline labels/values */
+  .specs p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .specs p strong {
+    margin-right: 6px;
+  }
+}
+
+/* ================= Mobile / Very Small Screens (<600px) ================= */
+@media (max-width: 600px) {
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+  gap: 20px;
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  min-height: 420px; /* bigger min-height for consistency */
+}
+
+.detail-info {
+  flex: 1; /* take up all remaining vertical space */
+  display: flex;
+  flex-direction: column;
+}
+
+.info-flex {
+  flex-grow: 1; /* pushes button to bottom */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+  .btn-enquire {
+    order: 3;
+    width: 100%;
+    text-align: center;
+  }
+
+  .specs p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  .specs p strong {
+    margin-right: 5px;
+  }
+}
+  
