@@ -9,10 +9,7 @@ import CategoryShowcase from './components/CategoryShowcase';
 import VideoCardsSection from "./components/VideoCardsSection";
 import CustomJewellery from './components/CustomJewellery';
 
-import BestSellerPage from './pages/BestSellerPage';
-import NewArrivals from './components/NewArrivals.jsx';
 import ProductDetailsPage from './pages/ProductDetailsPage';
-import FineSilver, { FineSilverDetails } from "./pages/FineSilver.jsx";
 
 // Admin entry
 import AdminApp from './admin/AdminApp';
@@ -48,13 +45,9 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/new-arrivals" element={<NewArrivals />} />
-        <Route path="/best-seller" element={<BestSellerPage />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="/admin/*" element={<AdminApp />} />
-        
-        <Route path="/fine-silver" element={<FineSilver />} />
-        <Route path="/fine-silver/:id" element={<FineSilverDetails />} />
+
 
          <Route path="/necklaces" element={<NecklacePage />} />
         <Route path="/ring" element={<RingPage />} />

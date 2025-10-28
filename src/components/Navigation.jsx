@@ -2,9 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 const Navigation = () => {
     const navItems = [
-        { name: 'New Arrivals', href: '/new-arrivals' },
-        { name: 'Best Seller', href: '/best-seller' },
-        { name: 'Fine Silver', href: '/fine-silver' },
+        { name: 'Contact', href: '#' },
         { name: 'About Us', href: '#' }
     ];
 

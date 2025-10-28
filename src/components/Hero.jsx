@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import "./Hero.css";
 
-import img1 from '../assets/images/hero/blueset12.jpg';
-import img2 from '../assets/images/hero/mens14.jpg';
-import img4 from '../assets/images/hero/ring13.png';
-import img5 from '../assets/images/hero/title1.jpg';
-import img8 from '../assets/images/hero/Rokdeshwar.jpg'
+import img1 from '../assets/images/hero/01.jpg';
+import img2 from '../assets/images/hero/02.jpg';
+import img3 from '../assets/images/hero/03.jpg';
+import img4 from '../assets/images/hero/04.jpg';
+import img5 from '../assets/images/hero/05.jpg';
+import img6 from '../assets/images/hero/06.jpg';
 
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,8 +23,9 @@ const Hero = () => {
 
     const slides = [
         {
-            image: img8,
-            description: "•Tradition •Purity •Trust •Transparency •Innovation",
+            image: img1,
+            title: "AMAARA",
+            description: "crafted for you",
             bgColor: "linear-gradient(135deg, #8b7355, #a68968)"
         },
         {
@@ -35,7 +37,7 @@ const Hero = () => {
             bgColor: "linear-gradient(135deg, #8b7355, #a68968)"
         },
         {
-            image: img5,
+            image: img3,
             title: "DISCOVER",
             subtitle: "GANTHAN STYLES",
             // code: "UPTO 50% OFF",
@@ -45,7 +47,7 @@ const Hero = () => {
             bgColor: "linear-gradient(135deg, #2c3e50, #4a6741)"
         },
         {
-            image: img1,
+            image: img4,
             title: "ELEGANT",
             subtitle: "Necklaces",
             code: "NEW ARRIVALS",
@@ -55,7 +57,7 @@ const Hero = () => {
             bgColor: "linear-gradient(135deg, #27ae60, #2ecc71)"
         },
         {
-            image: img4,
+            image: img5,
             title: "PREMIUM",
             subtitle: "RINGS",
             code: "COUPLE EDITION",
@@ -63,6 +65,15 @@ const Hero = () => {
             buttonText: "Shop Premium",
             url: "https://palmonas.com/collections/earrings",
             bgColor: "linear-gradient(135deg, #8e44ad, #9b59b6)"
+        },
+        {
+            image: img6,
+            title: "EXCLUSIVE",
+            subtitle: "COLLECTION",
+            description: "Discover our finest jewelry",
+            buttonText: "Explore Collection",
+            url: "https://palmonas.com/collections/rings",
+            bgColor: "linear-gradient(135deg, #16a085, #27ae60)"
         }
     ];
 

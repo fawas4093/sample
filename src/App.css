@@ -67,11 +67,37 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    gap: 20px;
     flex-wrap: nowrap; /* prevents wrapping on desktop */
 }
 
 /* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    height: 70px;
+}
+
+.logo img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
 .logo h1 {
     font-size: 32px;
     font-weight: bold;
@@ -89,8 +115,17 @@ body {
 /* =========================
    Search Container & Input
    ========================= */
-.search-container {
+.search-wrapper {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-container {
+    width: 100%;
     max-width: 500px;
     position: relative;
     display: flex;
@@ -149,8 +184,10 @@ body {
 /* Header Actions (icons) */
 .header-actions {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
 }
 
 .action-btn {
@@ -194,18 +231,13 @@ body {
     100% { transform: scale(1); }
 }
 
-/* Group: Search + Actions (used for mobile layout) */
-.search-and-actions {
+/* Logo and elements responsive alignment */
+.logo,
+.search-wrapper,
+.header-actions {
+    height: 70px;
     display: flex;
     align-items: center;
-    gap: 15px;
-    width: 100%;
-}
-
-/* For React: when you add 'mobile-layout' class we support it */
-.search-and-actions.mobile-layout {
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 /* ============
@@ -619,27 +651,42 @@ body {
         gap: 15px;
     }
 
+    .logo,
+    .search-wrapper,
+    .header-actions {
+        height: auto;
+    }
+
     .logo {
         order: 1;
         text-align: center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .search-and-actions {
+    .logo img {
+        max-height: 55px;
+        width: auto;
+    }
+
+    .search-wrapper {
         order: 2;
-        display: flex;
-        align-items: center;
-        gap: 15px;
         width: 100%;
+        margin: 0;
+        max-width: 100%;
     }
 
     .search-container {
-        flex: 1;
         max-width: none;
     }
 
     .header-actions {
-        flex-shrink: 0;
-        gap: 12px;
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
     }
 
     .action-btn {
@@ -767,7 +814,18 @@ body {
         letter-spacing: 1px;
     }
 
-    .search-and-actions { gap: 10px; }
+    .logo img {
+        max-height: 50px;
+        width: auto;
+    }
+
+    .search-wrapper {
+        margin: 0;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
 
     .search-input {
         padding: 11px 40px 11px 16px;

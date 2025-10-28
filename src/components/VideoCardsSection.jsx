@@ -25,8 +25,8 @@ const VideoCardsSection = () => {
           <Link key={i} to={card.link} className="video-card">
             <video src={card.video} autoPlay muted loop playsInline />
             <div className="video-card-text">
-              <h3>{card.title}</h3>
-              <span className="arrow">➔</span>
+              
+              
             </div>
           </Link>
         ))}

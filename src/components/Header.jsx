@@ -103,12 +103,15 @@ const Header = () => {
         {/* Brand -> home */}
         <div className="logo">
           <Link to="/" className="brand-link" aria-label="Go to home">
-            <h1>certifyied Jewelry</h1>
+            <img 
+              src="/new_logo.png" 
+              alt="Certifyied Jewelry Logo" 
+            />
           </Link>
         </div>
 
-        {/* Search + Actions */}
-        <div className={`search-and-actions ${isMobile ? 'mobile-layout' : ''}`}>
+        {/* Search Bar - Center */}
+        <div className="search-wrapper">
           <form className="search-container" onSubmit={handleSearch}>
             <input
               type="text"
@@ -123,8 +126,10 @@ const Header = () => {
               <FontAwesomeIcon icon={faSearch} />
             </button>
           </form>
+        </div>
 
-          <div className="header-actions" style={{display:'flex',alignItems:'center',gap:'20px'}}>
+        {/* Actions - Right */}
+        <div className="header-actions">
             {/* Admin Link */}
             <Link to="/admin/login" className="action-btn" aria-label="Admin">
               <FontAwesomeIcon icon={faUser} />
@@ -220,7 +225,6 @@ const Header = () => {
                 </div>
               )}
             </div>
-          </div>
         </div>
       </div>
     </header>
