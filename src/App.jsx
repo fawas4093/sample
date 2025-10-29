@@ -18,7 +18,7 @@ import NecklacePage from './pages/category/NecklacesPage.jsx';
 import RingPage from './pages/category/RingPage.jsx';
 import EarringPage from './pages/category/EarringPage.jsx';
 import BraceletPage from './pages/category/BraceletPage.jsx';
-import MensPage from './pages/category/MensPage.jsx';
+import PendantPage from './pages/category/PendantPage.jsx';
 import MangalsutraPage from './pages/category/MangalsutraPage.jsx';
 import StoreLocator from './components/StoreLocator.jsx';
 import StoresPage from './pages/StoresPage.jsx';
@@ -53,7 +53,7 @@ function App() {
         <Route path="/ring" element={<RingPage />} />
         <Route path="/earring" element={<EarringPage />} />
         <Route path="/bracelet" element={<BraceletPage />} />
-        <Route path="/mens" element={<MensPage />} />
+        <Route path="/pendant" element={<PendantPage />} />
         <Route path="/mangalsutra" element={<MangalsutraPage />} />
          {/* ✅ Add this route for your new store page */}
         <Route path="/stores" element={<StoresPage />} />

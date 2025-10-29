@@ -6,7 +6,7 @@ import './Category.css';
 import MangalsutraImg from '../assets/images/Type/Mangalsutra.png';
 import Earring from '../assets/images/Type/Earring.jpeg';
 import Bracelet from '../assets/images/Type/Bracelet.webp';
-import Mens from '../assets/images/Type/Mens.webp';
+import Pendant from '../assets/images/Type/Mens.webp';
 import Necklace from '../assets/images/Type/Necklace.png';
 import Ring from '../assets/images/Type/Ring.jpg';
 
@@ -15,7 +15,7 @@ const categories = [
   { name: 'Ring', image: Ring, path: '/ring' },
   { name: 'Earring', image: Earring, path: '/earring' },
   { name: 'Bracelet', image: Bracelet, path: '/bracelet' },
-  { name: 'Mens', image: Mens, path: '/mens' },
+  { name: 'Pendant', image: Pendant, path: '/pendant' },
   { name: 'Mangalsutra', image: MangalsutraImg, path: '/mangalsutra' },
 ];
 
