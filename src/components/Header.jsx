@@ -130,10 +130,9 @@ const Header = () => {
 
         {/* Actions - Right */}
         <div className="header-actions">
-            {/* Admin Link */}
-            <Link to="/admin/login" className="action-btn" aria-label="Admin">
+            {/* Customer Login/Register Link */}
+            <Link to="/customer-auth" className="action-btn" aria-label="Customer Account">
               <FontAwesomeIcon icon={faUser} />
-              <span className="badge">A</span>
             </Link>
 
             {/* Wishlist */}

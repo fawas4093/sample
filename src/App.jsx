@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import TopBanner from './components/TopBanner';
 import Header from './components/Header';
@@ -22,8 +22,7 @@ import PendantPage from './pages/category/PendantPage.jsx';
 import MangalsutraPage from './pages/category/MangalsutraPage.jsx';
 import StoreLocator from './components/StoreLocator.jsx';
 import StoresPage from './pages/StoresPage.jsx';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import CustomerAuth from './pages/CustomerAuth';
 
 import './App.css';
 
@@ -46,9 +45,9 @@ function App() {
       <Navigation />
 
       <Routes>
-        <Route path="/" element={<Navigate to="/signup" replace />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/customer-auth" element={<CustomerAuth mode="login" />} />
+        <Route path="/customer-register" element={<CustomerAuth mode="register" />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="/admin/*" element={<AdminApp />} />
 
