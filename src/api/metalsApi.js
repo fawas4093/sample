@@ -5,16 +5,43 @@
 // Uses GoldAPI for gold/silver rates in USD, then converts to INR using exchangerate.host
 export async function getMetalsRates(apiKey = 'goldapi-fwpich19mg9hdncb-io') {
   try {
+    // Default static prices (fallback when API fails)
+    let goldInrPerGram = 6200;
+    let silverInrPerGram = 75;
+
     // Get gold rate in USD per troy ounce
     const goldRes = await fetch('https://www.goldapi.io/api/XAU/USD', {
       headers: { 'x-access-token': apiKey, 'Content-Type': 'application/json' }
     });
+    
+    // Check if gold API request was successful
+    if (!goldRes.ok) {
+      console.warn(`GoldAPI error: ${goldRes.status} ${goldRes.statusText}. Using fallback rates.`);
+      return {
+        gold: `₹${goldInrPerGram.toFixed(2)}/g`,
+        silver: `₹${silverInrPerGram.toFixed(2)}/g`,
+        error: `API Error: ${goldRes.status}`
+      };
+    }
+    
     const goldData = await goldRes.json();
     console.log('GoldAPI gold response:', goldData);
+    
     // Get silver rate in USD per troy ounce
     const silverRes = await fetch('https://www.goldapi.io/api/XAG/USD', {
       headers: { 'x-access-token': apiKey, 'Content-Type': 'application/json' }
     });
+    
+    // Check if silver API request was successful
+    if (!silverRes.ok) {
+      console.warn(`GoldAPI error: ${silverRes.status} ${silverRes.statusText}. Using fallback rates.`);
+      return {
+        gold: `₹${goldInrPerGram.toFixed(2)}/g`,
+        silver: `₹${silverInrPerGram.toFixed(2)}/g`,
+        error: `API Error: ${silverRes.status}`
+      };
+    }
+    
     const silverData = await silverRes.json();
     console.log('GoldAPI silver response:', silverData);
 
@@ -28,8 +55,6 @@ export async function getMetalsRates(apiKey = 'goldapi-fwpich19mg9hdncb-io') {
     // 1 troy ounce = 31.1035 grams
     let goldPrice = goldData.price ? goldData.price : null;
     let silverPrice = silverData.price ? silverData.price : null;
-    let goldInrPerGram = 6200; // Default static price
-    let silverInrPerGram = 75; // Default static price
     if (
       usdToInr > 0 &&
       goldPrice && !isNaN(goldPrice) &&
@@ -50,6 +75,11 @@ export async function getMetalsRates(apiKey = 'goldapi-fwpich19mg9hdncb-io') {
     };
   } catch (err) {
     console.error('GoldAPI error:', err);
-    return { gold: 'N/A', silver: 'N/A', error: err };
+    // Return fallback rates on any error
+    return {
+      gold: '₹6,200.00/g',
+      silver: '₹75.00/g',
+      error: err
+    };
   }
 }

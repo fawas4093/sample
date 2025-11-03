@@ -1,7 +1,7 @@
 // src/pages/CustomerAuth.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import http from '../api/http';
+import axios from 'axios';
 import '../admin/pages/login.css';
 
 const CustomerAuth = ({ mode = 'login' }) => {
@@ -26,12 +26,28 @@ const CustomerAuth = ({ mode = 'login' }) => {
     setLoading(true);
     try {
       if (isLogin) {
-        const { data } = await http.post('/api/users/login', { email, password });
-        sessionStorage.setItem('userToken', data.token);
+        const { data } = await axios.post('https://amaara-ecom.onrender.com/api/user/login', { email, password });
+        
+        // Store user token if it exists in response
+        if (data.token) {
+          sessionStorage.setItem('userToken', data.token);
+        }
+        
+        // Store user email
         sessionStorage.setItem('userEmail', email);
-        navigate(redirectTo, { replace: true });
+        
+        // Store user ID - check different possible response structures
+        const userId = data.user?.id || data.user?._id || data.id || data.userId || data.user?.userId;
+        if (userId) {
+          sessionStorage.setItem('userId', userId.toString());
+          // Redirect to home page with user ID in URL
+          navigate(`/?userId=${userId}`, { replace: true });
+        } else {
+          // If no user ID found, redirect without it
+          navigate('/', { replace: true });
+        }
       } else {
-        await http.post('/api/users/register', { name, email, password });
+        await axios.post('https://amaara-ecom.onrender.com/api/user/register', { name, email, password });
         setErr('Registration successful! Redirecting to login...');
         setTimeout(() => {
           setIsLogin(true);

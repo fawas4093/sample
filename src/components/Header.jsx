@@ -87,12 +87,21 @@ const Header = () => {
   const handleRateMouseLeave = () => setShowRates(false);
 
   useEffect(() => {
-    const apiKey = 'demo'; // Replace with your Metals-API key for production
-    getMetalsRates(apiKey).then(ratesObj => {
+    // Use the default API key from getMetalsRates function
+    // To use a custom API key, set it here: const apiKey = 'your-api-key-here';
+    getMetalsRates().then(ratesObj => {
       setRates(r => ({
         ...r,
-        gold: ratesObj.gold,
-        silver: ratesObj.silver
+        gold: ratesObj.gold || '₹6,200.00/g', // Fallback if API fails
+        silver: ratesObj.silver || '₹75.00/g' // Fallback if API fails
+      }));
+    }).catch(err => {
+      console.error('Failed to fetch metal rates:', err);
+      // Keep default static rates if API fails completely
+      setRates(r => ({
+        ...r,
+        gold: '₹6,200.00/g',
+        silver: '₹75.00/g'
       }));
     });
   }, []);
@@ -142,10 +151,10 @@ const Header = () => {
             </button>
 
             {/* Cart */}
-            <button className="action-btn" aria-label="Cart">
+            <Link to="/cart" className="action-btn" aria-label="Cart">
               <FontAwesomeIcon icon={faShoppingBag} />
               <span className="badge">0</span>
-            </button>
+            </Link>
 
             {/* Rate Button (hover to show rates) */}
             <div style={{position:'relative',display:'inline-block'}}>

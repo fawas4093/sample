@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import TopBanner from './components/TopBanner';
 import Header from './components/Header';
@@ -23,19 +23,31 @@ import MangalsutraPage from './pages/category/MangalsutraPage.jsx';
 import StoreLocator from './components/StoreLocator.jsx';
 import StoresPage from './pages/StoresPage.jsx';
 import CustomerAuth from './pages/CustomerAuth';
+import Cart from './pages/Cart';
 
 import './App.css';
 
+// Protected Home component - redirects to login if not authenticated
+const Home = () => {
+  // Check authentication status
+  const userId = sessionStorage.getItem('userId');
+  const userToken = sessionStorage.getItem('userToken');
+  
+  // If not logged in, redirect to customer-auth
+  if (!userId && !userToken) {
+    return <Navigate to="/customer-auth" replace />;
+  }
 
-const Home = () => (
-  <>
-    <Hero />
-    <CategoryShowcase />
-    <VideoCardsSection />
-    <CustomJewellery /> 
-    <StoreLocator/>
-  </>
-);
+  return (
+    <>
+      <Hero />
+      <CategoryShowcase />
+      <VideoCardsSection />
+      <CustomJewellery /> 
+      <StoreLocator/>
+    </>
+  );
+};
 
 function App() {
   return (
@@ -49,6 +61,7 @@ function App() {
         <Route path="/customer-auth" element={<CustomerAuth mode="login" />} />
         <Route path="/customer-register" element={<CustomerAuth mode="register" />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/admin/*" element={<AdminApp />} />
 
          <Route path="/necklaces" element={<NecklacePage />} />
