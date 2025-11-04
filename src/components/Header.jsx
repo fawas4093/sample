@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getMetalsRates } from '../api/metalsApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faHeart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -72,39 +71,18 @@ const Header = () => {
     }
   };
 
-  // Placeholder rates, replace with live API data as needed
-
-  const [rates, setRates] = useState({
-    gold: 'Loading...',
-    silver: 'Loading...',
-    diamond: '₹3,50,000/carat', // Static
-    platinum: '₹3,200/g' // Static
-  });
+  // Static metal rates (no API calls)
+  const rates = {
+    gold: '₹6,200.00/g',
+    silver: '₹75.00/g',
+    diamond: '₹3,50,000/carat',
+    platinum: '₹3,200/g'
+  };
   const [showRates, setShowRates] = useState(false);
 
   // Show rates on hover
   const handleRateMouseEnter = () => setShowRates(true);
   const handleRateMouseLeave = () => setShowRates(false);
-
-  useEffect(() => {
-    // Use the default API key from getMetalsRates function
-    // To use a custom API key, set it here: const apiKey = 'your-api-key-here';
-    getMetalsRates().then(ratesObj => {
-      setRates(r => ({
-        ...r,
-        gold: ratesObj.gold || '₹6,200.00/g', // Fallback if API fails
-        silver: ratesObj.silver || '₹75.00/g' // Fallback if API fails
-      }));
-    }).catch(err => {
-      console.error('Failed to fetch metal rates:', err);
-      // Keep default static rates if API fails completely
-      setRates(r => ({
-        ...r,
-        gold: '₹6,200.00/g',
-        silver: '₹75.00/g'
-      }));
-    });
-  }, []);
 
   return (
     <header className="header">

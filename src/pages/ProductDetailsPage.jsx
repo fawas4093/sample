@@ -3,23 +3,63 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import http from '../api/http';
 import './ProductDetails.css';
 
+// Create a simple SVG placeholder as data URI (works offline)
+const createPlaceholderImage = (width = 800, height = 600, text = 'Image') => {
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#f3eaea"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="24" fill="#732f2f" text-anchor="middle" dominant-baseline="middle">${text}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+};
+
+// Placeholder images (created once, reused)
+const PLACEHOLDER_IMAGE = createPlaceholderImage(800, 600, 'Image');
+const PLACEHOLDER_THUMB = createPlaceholderImage(120, 120, 'NA');
+const API_BASE_URL = 'https://amaara-ecom.onrender.com';
+
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const [p, setP] = useState(location.state?.product || null);
-  const [hero, setHero] = useState('');
+  const [hero, setHero] = useState(PLACEHOLDER_IMAGE); // Initialize with placeholder instead of empty string
+
+  const getProductImageUrl = (product) => {
+    // Check for imageUrl first
+    if (product.imageUrl) {
+      return product.imageUrl.startsWith('http') ? product.imageUrl : `${API_BASE_URL}${product.imageUrl}`;
+    }
+    
+    // Check for single image string
+    if (product.image) {
+      return product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`;
+    }
+    
+    // Check for images array (new API structure: images[0].url)
+    if (product.images && product.images.length > 0) {
+      const imageUrl = typeof product.images[0] === 'string' 
+        ? product.images[0] 
+        : product.images[0].url;
+      
+      if (imageUrl) {
+        return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
+      }
+    }
+    
+    return PLACEHOLDER_IMAGE;
+  };
 
   useEffect(() => {
     if (location.state?.product) {
       setP(location.state.product);
-      setHero(location.state.product.image || 'https://via.placeholder.com/800x600?text=Image');
+      setHero(getProductImageUrl(location.state.product));
     } else {
       const load = async () => {
-        const res = await http.get(`/api/products/${id}`);
-        const prod = res.data;
-        setP(prod);
-        const first = prod.imageUrl || (prod.images && prod.images[0]);
-        setHero(first || 'https://via.placeholder.com/800x600?text=Image');
+        try {
+          const res = await http.get(`/api/products/${id}`);
+          const prod = res.data;
+          setP(prod);
+          setHero(getProductImageUrl(prod));
+        } catch (err) {
+          console.error('Error loading product:', err);
+          // Keep placeholder image
+        }
       };
       load();
     }
@@ -44,15 +84,23 @@ const ProductDetailsPage = () => {
         <div className="details-layout">
           <div className="media-block">
             <div className="hero-img">
-              <img id="pd-hero" src={hero} alt={p.title || p.name} onError={(e)=>{e.currentTarget.src='https://via.placeholder.com/800x600?text=Image';}} />
+              <img id="pd-hero" src={hero} alt={p.title || p.name} onError={(e)=>{e.currentTarget.src=PLACEHOLDER_IMAGE;}} />
             </div>
             {(p.images && p.images.length > 1) && (
               <div className="thumbs">
-                {p.images.map((src, idx) => (
-                  <button key={idx} className="thumb-btn" onClick={()=> setHero(src)}>
-                    <img src={src} alt={`${p.title || p.name} ${idx+1}`} onError={(e)=>{e.currentTarget.src='https://via.placeholder.com/120?text=NA';}} />
-                  </button>
-                ))}
+                {p.images.map((img, idx) => {
+                  const imgSrc = typeof img === 'string' ? img : img.url;
+                  const fullUrl = imgSrc && imgSrc.startsWith('http') ? imgSrc : `${API_BASE_URL}${imgSrc || ''}`;
+                  return (
+                    <button key={idx} className="thumb-btn" onClick={() => setHero(fullUrl || PLACEHOLDER_IMAGE)}>
+                      <img 
+                        src={fullUrl || PLACEHOLDER_THUMB} 
+                        alt={`${p.title || p.name} ${idx+1}`} 
+                        onError={(e) => { e.currentTarget.src = PLACEHOLDER_THUMB; }} 
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

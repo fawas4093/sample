@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './NecklacesPage.css';
 
+// Create a simple SVG placeholder as data URI (works offline)
+const createPlaceholderImage = (width = 300, height = 400, text = 'Necklace') => {
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#f3eaea"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="20" fill="#732f2f" text-anchor="middle" dominant-baseline="middle">${text}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+};
+
+const PLACEHOLDER_NECKLACE = createPlaceholderImage(300, 400, 'Necklace');
+const API_BASE_URL = 'https://amaara-ecom.onrender.com';
+
 const NecklacesPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +22,11 @@ const NecklacesPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get('https://amaara-ecom.onrender.com/api/product?category=necklaces');
+        const response = await axios.get(`${API_BASE_URL}/api/product/category/necklace`);
         
-        // Handle different response structures
-        const productsData = response.data?.content || response.data?.data || response.data || [];
-        setProducts(Array.isArray(productsData) ? productsData : []);
+        // API returns an array directly
+        const productsData = Array.isArray(response.data) ? response.data : [];
+        setProducts(productsData);
       } catch (err) {
         console.error('Error fetching necklaces:', err);
         setError('Failed to load necklaces. Please try again later.');
@@ -31,10 +40,28 @@ const NecklacesPage = () => {
   }, []);
 
   const getProductImage = (product) => {
-    if (product.imageUrl) return product.imageUrl;
-    if (product.image) return product.image;
-    if (product.images && product.images.length > 0) return product.images[0];
-    return 'https://via.placeholder.com/300x400?text=Necklace';
+    // Check for imageUrl first
+    if (product.imageUrl) {
+      return product.imageUrl.startsWith('http') ? product.imageUrl : `${API_BASE_URL}${product.imageUrl}`;
+    }
+    
+    // Check for single image string
+    if (product.image) {
+      return product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`;
+    }
+    
+    // Check for images array (new API structure: images[0].url)
+    if (product.images && product.images.length > 0) {
+      const imageUrl = typeof product.images[0] === 'string' 
+        ? product.images[0] 
+        : product.images[0].url;
+      
+      if (imageUrl) {
+        return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
+      }
+    }
+    
+    return PLACEHOLDER_NECKLACE;
   };
 
   const getProductPrice = (product) => {
@@ -105,7 +132,7 @@ const NecklacesPage = () => {
                       src={getProductImage(product)} 
                       alt={getProductTitle(product)}
                       onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/300x400?text=Necklace';
+                        e.currentTarget.src = PLACEHOLDER_NECKLACE;
                       }}
                     />
                   </div>

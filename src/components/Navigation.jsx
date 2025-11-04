@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 const Navigation = () => {
     const navItems = [
         { name: 'Contact', href: '#' },
-        { name: 'About Us', href: '#' }
+        { name: 'About Us', href: '/about-us' }
     ];
 
     return (
@@ -12,10 +12,17 @@ const Navigation = () => {
                 <ul className="nav-menu">
                     {navItems.map((item, index) => (
                         <li key={index}>
-                            <a href={item.href} className={item.badge ? `nav-badge ${item.badge}` : ''}>
-                                {item.name}
-                                {item.badge && <span className="badge-text">{item.badge}</span>}
-                            </a>
+                            {item.href === '#' ? (
+                                <a href={item.href} className={item.badge ? `nav-badge ${item.badge}` : ''}>
+                                    {item.name}
+                                    {item.badge && <span className="badge-text">{item.badge}</span>}
+                                </a>
+                            ) : (
+                                <NavLink to={item.href} className={item.badge ? `nav-badge ${item.badge}` : ''}>
+                                    {item.name}
+                                    {item.badge && <span className="badge-text">{item.badge}</span>}
+                                </NavLink>
+                            )}
                         </li>
                     ))}
                 </ul>

@@ -22,6 +22,7 @@ import PendantPage from './pages/category/PendantPage.jsx';
 import MangalsutraPage from './pages/category/MangalsutraPage.jsx';
 import StoreLocator from './components/StoreLocator.jsx';
 import StoresPage from './pages/StoresPage.jsx';
+import AboutUsPage from './pages/AboutUsPage.jsx';
 import CustomerAuth from './pages/CustomerAuth';
 import Cart from './pages/Cart';
 
@@ -69,9 +70,10 @@ function App() {
         <Route path="/earring" element={<EarringPage />} />
         <Route path="/bracelet" element={<BraceletPage />} />
         <Route path="/pendant" element={<PendantPage />} />
-        <Route path="/mangalsutra" element={<MangalsutraPage />} />
+         <Route path="/mangalsutra" element={<MangalsutraPage />} />
          {/* ✅ Add this route for your new store page */}
         <Route path="/stores" element={<StoresPage />} />
+        <Route path="/about-us" element={<AboutUsPage />} />
       </Routes>
     </BrowserRouter>
   );
