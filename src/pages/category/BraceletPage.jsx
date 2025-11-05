@@ -40,25 +40,50 @@ const BraceletPage = () => {
   }, []);
 
   const getProductImage = (product) => {
-    // Check for imageUrl first
-    if (product.imageUrl) {
-      return product.imageUrl.startsWith('http') ? product.imageUrl : `${API_BASE_URL}${product.imageUrl}`;
-    }
-    
-    // Check for single image string
-    if (product.image) {
-      return product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`;
-    }
-    
-    // Check for images array (new API structure: images[0].url)
-    if (product.images && product.images.length > 0) {
-      const imageUrl = typeof product.images[0] === 'string' 
-        ? product.images[0] 
-        : product.images[0].url;
+    // Check for images array first (backend format: images[{url, alt, _id}])
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      const firstImage = product.images[0];
+      let imageUrl = null;
+      
+      // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
+      if (typeof firstImage === 'object' && firstImage !== null) {
+        imageUrl = firstImage.url || firstImage.imageUrl || firstImage.src;
+      } 
+      // Handle string format (fallback)
+      else if (typeof firstImage === 'string') {
+        imageUrl = firstImage;
+      }
       
       if (imageUrl) {
-        return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
+        // If URL starts with http/https, use as-is
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+          return imageUrl;
+        }
+        // If URL starts with /, prefix with API_BASE_URL
+        if (imageUrl.startsWith('/')) {
+          return `${API_BASE_URL}${imageUrl}`;
+        }
+        // Otherwise, prefix with API_BASE_URL and ensure leading /
+        return `${API_BASE_URL}/${imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl}`;
       }
+    }
+    
+    // Check for imageUrl (fallback)
+    if (product.imageUrl) {
+      const imageUrl = product.imageUrl;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+      }
+      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
+    }
+    
+    // Check for single image string (fallback)
+    if (product.image) {
+      const imageUrl = product.image;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+      }
+      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
     }
     
     return PLACEHOLDER_BRACELET;
@@ -75,6 +100,96 @@ const BraceletPage = () => {
 
   const getProductId = (product) => {
     return product.id || product._id || '';
+  };
+
+  const getProductDescription = (product) => {
+    return product.description || '';
+  };
+
+  const getProductCategory = (product) => {
+    return product.category || '';
+  };
+
+  const getProductImageAlt = (product) => {
+    // Check if images array has alt text
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      const firstImage = product.images[0];
+      if (typeof firstImage === 'object' && firstImage !== null && firstImage.alt) {
+        return firstImage.alt;
+      }
+    }
+    // Fallback to product title
+    return getProductTitle(product);
+  };
+
+  const getAllProductImages = (product) => {
+    const images = [];
+    
+    // Check for images array (backend format: images[{url, alt, _id}])
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      product.images.forEach(img => {
+        let imageUrl = null;
+        
+        // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
+        if (typeof img === 'object' && img !== null) {
+          imageUrl = img.url || img.imageUrl || img.src;
+        } 
+        // Handle string format (fallback)
+        else if (typeof img === 'string') {
+          imageUrl = img;
+        }
+        
+        if (imageUrl) {
+          let fullUrl;
+          // If URL starts with http/https, use as-is
+          if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+            fullUrl = imageUrl;
+          }
+          // If URL starts with /, prefix with API_BASE_URL
+          else if (imageUrl.startsWith('/')) {
+            fullUrl = `${API_BASE_URL}${imageUrl}`;
+          }
+          // Otherwise, prefix with API_BASE_URL and ensure leading /
+          else {
+            fullUrl = `${API_BASE_URL}/${imageUrl}`;
+          }
+          
+          if (!images.includes(fullUrl)) {
+            images.push(fullUrl);
+          }
+        }
+      });
+    }
+    
+    // Check for imageUrl (fallback)
+    if (product.imageUrl && images.length === 0) {
+      const imageUrl = product.imageUrl;
+      let fullUrl;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        fullUrl = imageUrl;
+      } else {
+        fullUrl = imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
+      }
+      if (!images.includes(fullUrl)) {
+        images.push(fullUrl);
+      }
+    }
+    
+    // Check for single image string (fallback)
+    if (product.image && images.length === 0) {
+      const imageUrl = product.image;
+      let fullUrl;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        fullUrl = imageUrl;
+      } else {
+        fullUrl = imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
+      }
+      if (!images.includes(fullUrl)) {
+        images.push(fullUrl);
+      }
+    }
+    
+    return images.length > 0 ? images : [PLACEHOLDER_BRACELET];
   };
 
   if (loading) {
@@ -120,6 +235,10 @@ const BraceletPage = () => {
           <div className="products-grid">
             {products.map((product) => {
               const productId = getProductId(product);
+              const allImages = getAllProductImages(product);
+              const description = getProductDescription(product);
+              const category = getProductCategory(product);
+              
               return (
                 <Link 
                   key={productId} 
@@ -129,15 +248,33 @@ const BraceletPage = () => {
                 >
                   <div className="thumb">
                     <img 
-                      src={getProductImage(product)} 
-                      alt={getProductTitle(product)}
+                      src={product.images && product.images.length > 0 && product.images[0].url 
+                        ? `${API_BASE_URL}${product.images[0].url}` 
+                        : PLACEHOLDER_BRACELET} 
+                      alt={product.images && product.images.length > 0 && product.images[0].alt 
+                        ? product.images[0].alt 
+                        : getProductTitle(product)}
+                      className="product-image"
                       onError={(e) => {
                         e.currentTarget.src = PLACEHOLDER_BRACELET;
                       }}
                     />
+                    {allImages.length > 1 && (
+                      <div className="image-indicator">
+                        <span className="image-count">{allImages.length} images</span>
+                      </div>
+                    )}
+                    {category && (
+                      <div className="category-badge">
+                        {category}
+                      </div>
+                    )}
                   </div>
                   <div className="info">
                     <h3 className="title">{getProductTitle(product)}</h3>
+                    {description && (
+                      <p className="description">{description.length > 100 ? `${description.substring(0, 100)}...` : description}</p>
+                    )}
                     <div className="meta">
                       <span className="price">₹{getProductPrice(product).toLocaleString('en-IN')}</span>
                     </div>

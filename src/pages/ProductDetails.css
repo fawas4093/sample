@@ -69,6 +69,70 @@ display: block;
 margin-bottom: 12px;
 }
 
+/* Price Display */
+.price-display {
+margin: 16px 0;
+padding: 16px;
+background: #f8f6f2;
+border-radius: 8px;
+border-left: 4px solid #2c1810;
+}
+
+.price-label {
+font-size: 0.95rem;
+color: #666;
+font-weight: 500;
+margin-right: 8px;
+}
+
+.price-value {
+font-size: 1.8rem;
+font-weight: 700;
+color: #2c1810;
+}
+
+/* Description Block */
+.description-block {
+margin: 20px 0;
+padding: 16px 0;
+border-top: 1px solid #eee;
+border-bottom: 1px solid #eee;
+}
+
+.description-block h4 {
+font-size: 1.1rem;
+color: #2c1810;
+margin-bottom: 12px;
+font-weight: 600;
+}
+
+.description-text {
+font-size: 1rem;
+line-height: 1.7;
+color: #444;
+white-space: pre-wrap;
+}
+
+/* Category Display */
+.category-display {
+margin: 12px 0;
+padding: 8px 0;
+}
+
+.category-label {
+font-size: 0.9rem;
+color: #666;
+font-weight: 500;
+margin-right: 8px;
+}
+
+.category-value {
+font-size: 1rem;
+color: #2c1810;
+font-weight: 600;
+text-transform: capitalize;
+}
+
 .highlight-list {
 display: grid;
 gap: 12px;
@@ -162,5 +226,17 @@ grid-template-columns: 1fr;
 .media-block .thumb-btn img {
 width: 68px;
 height: 68px;
+}
+
+.price-value {
+font-size: 1.5rem;
+}
+
+.description-text {
+font-size: 0.95rem;
+}
+
+.description-block h4 {
+font-size: 1rem;
 }
 }

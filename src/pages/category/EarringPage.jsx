@@ -12,6 +12,34 @@ const createPlaceholderImage = (width = 300, height = 400, text = 'Earring') => 
 const PLACEHOLDER_EARRING = createPlaceholderImage(300, 400, 'Earring');
 const API_BASE_URL = 'https://amaara-ecom.onrender.com';
 
+// Static images from public/images/products folder
+// Earring images from 1 to 17
+const STATIC_EARRING_IMAGE_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+// Helper function to get static image path by index
+const getStaticImagePath = (index) => {
+  const imageNum = STATIC_EARRING_IMAGE_NUMBERS[index % STATIC_EARRING_IMAGE_NUMBERS.length];
+  return `/images/products/earring-${imageNum}.jpg`;
+};
+
+// Helper function to get product name from API
+const getProductName = (product) => {
+  return product.name || product.title || 'Earring';
+};
+
+// Helper function to get product price from API
+const getProductPrice = (product) => {
+  if (product.price !== undefined && product.price !== null) {
+    return Number(product.price);
+  }
+  return 0;
+};
+
+// Helper function to get product ID
+const getProductId = (product) => {
+  return product.id || product._id || '';
+};
+
 const EarringPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,48 +67,13 @@ const EarringPage = () => {
     fetchProducts();
   }, []);
 
-  const getProductImage = (product) => {
-    // Check for imageUrl first
-    if (product.imageUrl) {
-      return product.imageUrl.startsWith('http') ? product.imageUrl : `${API_BASE_URL}${product.imageUrl}`;
-    }
-    
-    // Check for single image string
-    if (product.image) {
-      return product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`;
-    }
-    
-    // Check for images array (new API structure: images[0].url)
-    if (product.images && product.images.length > 0) {
-      const imageUrl = typeof product.images[0] === 'string' 
-        ? product.images[0] 
-        : product.images[0].url;
-      
-      if (imageUrl) {
-        return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
-      }
-    }
-    
-    return PLACEHOLDER_EARRING;
-  };
-
-  const getProductPrice = (product) => {
-    if (product.price) return Number(product.price);
-    return 0;
-  };
-
-  const getProductTitle = (product) => {
-    return product.title || product.name || 'Earring';
-  };
-
-  const getProductId = (product) => {
-    return product.id || product._id || '';
-  };
-
   if (loading) {
     return (
       <div className="earrings-page">
         <div className="container">
+          <nav className="breadcrumb">
+            <Link to="/">Home</Link> <span>›</span> <span>Earrings</span>
+          </nav>
           <h1>Earrings</h1>
           <div style={{ padding: '60px 0', textAlign: 'center' }}>
             <p>Loading earrings...</p>
@@ -94,6 +87,9 @@ const EarringPage = () => {
     return (
       <div className="earrings-page">
         <div className="container">
+          <nav className="breadcrumb">
+            <Link to="/">Home</Link> <span>›</span> <span>Earrings</span>
+          </nav>
           <h1>Earrings</h1>
           <div style={{ padding: '60px 0', textAlign: 'center', color: '#d32f2f' }}>
             <p>{error}</p>
@@ -118,32 +114,53 @@ const EarringPage = () => {
           </div>
         ) : (
           <div className="products-grid">
-            {products.map((product) => {
+            {products.map((product, index) => {
               const productId = getProductId(product);
+              // Get name, description, and price from API
+              const productName = getProductName(product);
+              const description = product.description || '';
+              const productPrice = getProductPrice(product);
+              // Use static image from public/images/products folder (earring-{number}.jpg)
+              const staticImage = getStaticImagePath(index);
+              
               return (
-                <Link 
-                  key={productId} 
-                  to={`/product/${productId}`}
-                  className="product-card"
-                  state={{ product }}
-                >
-                  <div className="thumb">
-                    <img 
-                      src={getProductImage(product)} 
-                      alt={getProductTitle(product)}
-                      onError={(e) => {
-                        e.currentTarget.src = PLACEHOLDER_EARRING;
-                      }}
-                    />
-                  </div>
-                  <div className="info">
-                    <h3 className="title">{getProductTitle(product)}</h3>
-                    <div className="meta">
-                      <span className="price">₹{getProductPrice(product).toLocaleString('en-IN')}</span>
+                <div key={productId} className="product-card">
+                  <Link 
+                    to={`/product/${productId}`}
+                    className="product-link"
+                    state={{ product }}
+                  >
+                    <div className="thumb">
+                      <img 
+                        src={staticImage} 
+                        alt={productName}
+                        className="product-image"
+                        onError={(e) => {
+                          e.currentTarget.src = PLACEHOLDER_EARRING;
+                        }}
+                      />
                     </div>
-                    <button className="btn-primary">View Details</button>
-                  </div>
-                </Link>
+                    <div className="info">
+                      <h3 className="title">{productName}</h3>
+                      {description && (
+                        <p className="description">{description.length > 100 ? `${description.substring(0, 100)}...` : description}</p>
+                      )}
+                      <div className="meta">
+                        <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
+                      </div>
+                    </div>
+                  </Link>
+                  <button 
+                    className="btn-primary buy-btn" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Add buy functionality here
+                      alert(`Added ${productName} to cart!`);
+                    }}
+                  >
+                    Buy
+                  </button>
+                </div>
               );
             })}
           </div>

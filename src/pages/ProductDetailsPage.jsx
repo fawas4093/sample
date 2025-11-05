@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import http from '../api/http';
+import axios from 'axios';
 import './ProductDetails.css';
 
 // Create a simple SVG placeholder as data URI (works offline)
@@ -21,25 +21,50 @@ const ProductDetailsPage = () => {
   const [hero, setHero] = useState(PLACEHOLDER_IMAGE); // Initialize with placeholder instead of empty string
 
   const getProductImageUrl = (product) => {
-    // Check for imageUrl first
-    if (product.imageUrl) {
-      return product.imageUrl.startsWith('http') ? product.imageUrl : `${API_BASE_URL}${product.imageUrl}`;
-    }
-    
-    // Check for single image string
-    if (product.image) {
-      return product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`;
-    }
-    
-    // Check for images array (new API structure: images[0].url)
-    if (product.images && product.images.length > 0) {
-      const imageUrl = typeof product.images[0] === 'string' 
-        ? product.images[0] 
-        : product.images[0].url;
+    // Check for images array first (backend format: images[{url, alt, _id}])
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      const firstImage = product.images[0];
+      let imageUrl = null;
+      
+      // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
+      if (typeof firstImage === 'object' && firstImage !== null) {
+        imageUrl = firstImage.url || firstImage.imageUrl || firstImage.src;
+      } 
+      // Handle string format (fallback)
+      else if (typeof firstImage === 'string') {
+        imageUrl = firstImage;
+      }
       
       if (imageUrl) {
-        return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
+        // If URL starts with http/https, use as-is
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+          return imageUrl;
+        }
+        // If URL starts with /, prefix with API_BASE_URL
+        if (imageUrl.startsWith('/')) {
+          return `${API_BASE_URL}${imageUrl}`;
+        }
+        // Otherwise, prefix with API_BASE_URL and ensure leading /
+        return `${API_BASE_URL}/${imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl}`;
       }
+    }
+    
+    // Check for imageUrl (fallback)
+    if (product.imageUrl) {
+      const imageUrl = product.imageUrl;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+      }
+      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
+    }
+    
+    // Check for single image string (fallback)
+    if (product.image) {
+      const imageUrl = product.image;
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+      }
+      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
     }
     
     return PLACEHOLDER_IMAGE;
@@ -52,7 +77,18 @@ const ProductDetailsPage = () => {
     } else {
       const load = async () => {
         try {
-          const res = await http.get(`/api/products/${id}`);
+          // Try multiple possible API endpoints
+          let res;
+          try {
+            res = await axios.get(`${API_BASE_URL}/api/product/${id}`);
+          } catch (err1) {
+            try {
+              res = await axios.get(`${API_BASE_URL}/api/products/${id}`);
+            } catch (err2) {
+              console.error('Error loading product:', err2);
+              return;
+            }
+          }
           const prod = res.data;
           setP(prod);
           setHero(getProductImageUrl(prod));
@@ -89,13 +125,28 @@ const ProductDetailsPage = () => {
             {(p.images && p.images.length > 1) && (
               <div className="thumbs">
                 {p.images.map((img, idx) => {
-                  const imgSrc = typeof img === 'string' ? img : img.url;
-                  const fullUrl = imgSrc && imgSrc.startsWith('http') ? imgSrc : `${API_BASE_URL}${imgSrc || ''}`;
+                  let imgSrc = null;
+                  
+                  // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
+                  if (typeof img === 'object' && img !== null) {
+                    imgSrc = img.url || img.imageUrl || img.src;
+                  } 
+                  // Handle string format
+                  else if (typeof img === 'string') {
+                    imgSrc = img;
+                  }
+                  
+                  const fullUrl = imgSrc 
+                    ? (imgSrc.startsWith('http://') || imgSrc.startsWith('https://') 
+                        ? imgSrc 
+                        : `${API_BASE_URL}${imgSrc.startsWith('/') ? imgSrc : '/' + imgSrc}`)
+                    : PLACEHOLDER_THUMB;
+                  
                   return (
                     <button key={idx} className="thumb-btn" onClick={() => setHero(fullUrl || PLACEHOLDER_IMAGE)}>
                       <img 
                         src={fullUrl || PLACEHOLDER_THUMB} 
-                        alt={`${p.title || p.name} ${idx+1}`} 
+                        alt={typeof img === 'object' && img.alt ? img.alt : `${p.title || p.name} ${idx+1}`} 
                         onError={(e) => { e.currentTarget.src = PLACEHOLDER_THUMB; }} 
                       />
                     </button>
@@ -107,6 +158,31 @@ const ProductDetailsPage = () => {
 
           <div className="highlights-block">
             <h3>{p.title || p.name}</h3>
+            
+            {/* Price Display */}
+            {p.price !== undefined && p.price !== null && (
+              <div className="price-display">
+                <span className="price-label">Price:</span>
+                <span className="price-value">₹{Number(p.price).toLocaleString('en-IN')}</span>
+              </div>
+            )}
+            
+            {/* Description Display */}
+            {p.description && (
+              <div className="description-block">
+                <h4>Description</h4>
+                <p className="description-text">{p.description}</p>
+              </div>
+            )}
+            
+            {/* Category Display */}
+            {p.category && (
+              <div className="category-display">
+                <span className="category-label">Category:</span>
+                <span className="category-value">{p.category}</span>
+              </div>
+            )}
+            
             <div className="highlight-list">
               {(p.highlights || []).map((h, i) => (
                 <div key={i} className="highlight-item">
@@ -130,9 +206,6 @@ const ProductDetailsPage = () => {
               <li><span>Gender:</span> {p.specs?.gender || '-'}</li>
               <li><span>Brand:</span> {p.specs?.brand || '-'}</li>
             </ul>
-            <p style={{ marginTop: 10, fontWeight: 700 }}>
-              Price: ₹ {Number(p.price || p.price === 0 ? p.price : (10000 + (p.id || 1) * 500)).toLocaleString('en-IN')}
-            </p>
           </div>
         </div>
       </div>
