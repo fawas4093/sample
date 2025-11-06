@@ -124,43 +124,33 @@ const EarringPage = () => {
               const staticImage = getStaticImagePath(index);
               
               return (
-                <div key={productId} className="product-card">
-                  <Link 
-                    to={`/product/${productId}`}
-                    className="product-link"
-                    state={{ product }}
-                  >
-                    <div className="thumb">
-                      <img 
-                        src={staticImage} 
-                        alt={productName}
-                        className="product-image"
-                        onError={(e) => {
-                          e.currentTarget.src = PLACEHOLDER_EARRING;
-                        }}
-                      />
+                <Link 
+                  key={productId} 
+                  to={`/product/${productId}`}
+                  className="product-card"
+                  state={{ product }}
+                >
+                  <div className="thumb">
+                    <img 
+                      src={staticImage} 
+                      alt={productName}
+                      className="product-image"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_EARRING;
+                      }}
+                    />
+                  </div>
+                  <div className="info">
+                    <h3 className="title">{productName}</h3>
+                    {description && (
+                      <p className="description">{description.length > 100 ? `${description.substring(0, 100)}...` : description}</p>
+                    )}
+                    <div className="meta">
+                      <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="info">
-                      <h3 className="title">{productName}</h3>
-                      {description && (
-                        <p className="description">{description.length > 100 ? `${description.substring(0, 100)}...` : description}</p>
-                      )}
-                      <div className="meta">
-                        <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
-                      </div>
-                    </div>
-                  </Link>
-                  <button 
-                    className="btn-primary buy-btn" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // Add buy functionality here
-                      alert(`Added ${productName} to cart!`);
-                    }}
-                  >
-                    Buy
-                  </button>
-                </div>
+                    <button className="btn-primary">View Details</button>
+                  </div>
+                </Link>
               );
             })}
           </div>

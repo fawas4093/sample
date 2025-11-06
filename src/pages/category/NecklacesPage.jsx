@@ -122,43 +122,33 @@ const NecklacesPage = () => {
               const staticImage = getStaticImagePath(index);
               
               return (
-                <div key={productId} className="product-card">
-                  <Link 
-                    to={`/product/${productId}`}
-                    className="product-link"
-                    state={{ product }}
-                  >
-                    <div className="thumb">
-                      <img 
-                        src={staticImage} 
-                        alt={productTitle}
-                        className="product-image"
-                        onError={(e) => {
-                          e.currentTarget.src = PLACEHOLDER_NECKLACE;
-                        }}
-                      />
+                <Link 
+                  key={productId} 
+                  to={`/product/${productId}`}
+                  className="product-card"
+                  state={{ product }}
+                >
+                  <div className="thumb">
+                    <img 
+                      src={staticImage} 
+                      alt={productTitle}
+                      className="product-image"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_NECKLACE;
+                      }}
+                    />
+                  </div>
+                  <div className="info">
+                    <h3 className="title">{productTitle}</h3>
+                    {product.description && (
+                      <p className="description">{product.description.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}</p>
+                    )}
+                    <div className="meta">
+                      <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="info">
-                      <h3 className="title">{productTitle}</h3>
-                      {product.description && (
-                        <p className="description">{product.description.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}</p>
-                      )}
-                      <div className="meta">
-                        <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
-                      </div>
-                    </div>
-                  </Link>
-                  <button 
-                    className="btn-primary buy-btn" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // Add buy functionality here
-                      alert(`Added ${productTitle} to cart!`);
-                    }}
-                  >
-                    Buy
-                  </button>
-                </div>
+                    <button className="btn-primary">View Details</button>
+                  </div>
+                </Link>
               );
             })}
           </div>

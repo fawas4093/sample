@@ -80,7 +80,6 @@ const Hero = () => {
     const nextSlide = useCallback(() => setCurrentSlide(prev => (prev + 1) % slides.length), [slides.length]);
     const prevSlide = useCallback(() => setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length), [slides.length]);
     const goToSlide = useCallback((index) => setCurrentSlide(index), []);
-    const handleShopNow = useCallback(() => window.open(slides[currentSlide].url, '_blank'), [slides, currentSlide]);
 
     useEffect(() => {
         const autoSlide = setInterval(nextSlide, 8000);
@@ -105,13 +104,6 @@ const Hero = () => {
                             <h2 className="offer-title">{slides[currentSlide].title}</h2>
                             {slides[currentSlide].subtitle && <h3 className="offer-subtitle">{slides[currentSlide].subtitle}</h3>}
                             {slides[currentSlide].code && <p className="offer-code">{slides[currentSlide].code}</p>}
-
-                            {/* Render button only if not the first slide */}
-                            {currentSlide !== 0 && slides[currentSlide].buttonText && (
-                                <button className="shop-now-btn" onClick={handleShopNow}>
-                                    {slides[currentSlide].buttonText}
-                                </button>
-                            )}
 
                             {slides[currentSlide].description && <p className="offer-terms">{slides[currentSlide].description}</p>}
                         </div>

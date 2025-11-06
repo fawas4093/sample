@@ -19,8 +19,9 @@ text-decoration: underline;
 /* Layout */
 .page-product-details .details-layout {
 display: grid;
-grid-template-columns: 1.2fr 1fr 1.2fr;
-gap: 24px;
+grid-template-columns: 1fr 1fr;
+gap: 40px;
+align-items: flex-start;
 }
 
 /* Left: Media */
@@ -219,6 +220,21 @@ color: #fff;
 @media (max-width: 1024px) {
 .page-product-details .details-layout {
 grid-template-columns: 1fr;
+gap: 30px;
+}
+
+.media-block {
+order: -1; /* Show image first on mobile */
+}
+}
+
+@media (max-width: 768px) {
+.page-product-details .details-layout {
+gap: 24px;
+}
+
+.media-block .hero-img {
+aspect-ratio: 1;
 }
 }
 

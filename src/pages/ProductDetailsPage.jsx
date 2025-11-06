@@ -14,11 +14,17 @@ const PLACEHOLDER_IMAGE = createPlaceholderImage(800, 600, 'Image');
 const PLACEHOLDER_THUMB = createPlaceholderImage(120, 120, 'NA');
 const API_BASE_URL = 'https://amaara-ecom.onrender.com';
 
+// Product detail image from public/images/products folder
+const PRODUCT_DETAIL_IMAGE = '/images/products/productdetail.webp';
+
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const [p, setP] = useState(location.state?.product || null);
   const [hero, setHero] = useState(PLACEHOLDER_IMAGE); // Initialize with placeholder instead of empty string
+  const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [cartMessage, setCartMessage] = useState(null);
 
   const getProductImageUrl = (product) => {
     // Check for images array first (backend format: images[{url, alt, _id}])
@@ -101,111 +107,298 @@ const ProductDetailsPage = () => {
     }
   }, [id, location.state]);
 
+  // Helper function to get product amount
+  const getProductAmount = (product) => {
+    if (product.amount !== undefined && product.amount !== null) {
+      return Number(product.amount);
+    }
+    if (product.price !== undefined && product.price !== null) {
+      return Number(product.price);
+    }
+    return 0;
+  };
+
+  // Helper function to get product name
+  const getProductName = (product) => {
+    return product.name || product.title || 'Product';
+  };
+
+  // Helper function to get product description
+  const getProductDescription = (product) => {
+    return product.description || product.desc || '';
+  };
+
+  // Calculate total amount based on quantity
+  const baseAmount = p ? getProductAmount(p) : 0;
+  const totalAmount = baseAmount * quantity;
+
+  // Handle quantity changes
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity < 1) return;
+    setQuantity(newQuantity);
+  };
+
+  // Get product image from public folder
+  const getProductImagePath = () => {
+    return PRODUCT_DETAIL_IMAGE;
+  };
+
+  // Helper function to get product ID
+  const getProductId = (product) => {
+    return product.id || product._id || id || '';
+  };
+
+  // Handle add to cart
+  const handleAddToCart = async () => {
+    if (!p) return;
+
+    setIsAddingToCart(true);
+    setCartMessage(null);
+
+    try {
+      const productId = getProductId(p);
+      
+      // Validate productId
+      if (!productId || productId === '') {
+        throw new Error('Product ID is missing');
+      }
+
+      // Ensure productId is a string
+      const productIdString = String(productId);
+      
+      // Get user token and userId from sessionStorage if available
+      const userToken = sessionStorage.getItem('userToken');
+      const userId = sessionStorage.getItem('userId');
+      
+      // Prepare headers
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add authorization header if token exists
+      if (userToken) {
+        headers['Authorization'] = `Bearer ${userToken}`;
+      }
+      
+      // API expects format: { 'productId': '...', 'quantity': ... }
+      const cartData = {
+        productId: productIdString,
+        quantity: quantity
+      };
+      
+      // Include userId in request if available (some APIs require it)
+      if (userId) {
+        cartData.userId = userId;
+      }
+
+      console.log('Sending cart data:', cartData);
+      console.log('Headers:', headers);
+
+      const response = await axios.post(`${API_BASE_URL}/api/cart/add`, cartData, {
+        headers: headers
+      });
+      
+      console.log('Cart response:', response.data);
+      
+      setCartMessage({
+        type: 'success',
+        text: 'Item added to cart successfully!'
+      });
+
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setCartMessage(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Error response headers:', error.response?.headers);
+      console.error('Request data sent:', {
+        productId: getProductId(p),
+        quantity: quantity
+      });
+      
+      // Try to extract more detailed error information
+      let errorMessage = 'Failed to add item to cart. Please try again.';
+      
+      if (error.response) {
+        // Server responded with error
+        const errorData = error.response.data;
+        errorMessage = errorData?.message 
+          || errorData?.error 
+          || errorData?.errorMessage
+          || `Server error: ${error.response.status}`;
+        
+        // If it's a 500 error, provide more helpful message
+        if (error.response.status === 500) {
+          errorMessage = 'Internal server error. Please check if you are logged in and try again.';
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMessage = 'No response from server. Please check your connection.';
+      } else {
+        // Error in setting up the request
+        errorMessage = error.message || 'An error occurred. Please try again.';
+      }
+      
+      setCartMessage({
+        type: 'error',
+        text: errorMessage
+      });
+
+      // Clear error message after 5 seconds
+      setTimeout(() => {
+        setCartMessage(null);
+      }, 5000);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
   if (!p) return <div className="container" style={{ padding: '40px 0' }}><h2>Loading...</h2></div>;
 
   return (
     <main className="page page-product-details">
       <div className="container">
         <nav className="breadcrumb">
-          <Link to="/">Home</Link> <span>›</span>
-          {location.state?.fromNewArrivals ? (
-            <Link to="/new-arrivals"> New Arrival</Link>
-          ) : (
-            <Link to="/best-seller"> Best Seller</Link>
-          )}
-          <span>›</span>
-          <span>{p.title || p.name}</span>
+          <Link to="/">Home</Link> <span>›</span> <span>{getProductName(p)}</span>
         </nav>
 
         <div className="details-layout">
-          <div className="media-block">
-            <div className="hero-img">
-              <img id="pd-hero" src={hero} alt={p.title || p.name} onError={(e)=>{e.currentTarget.src=PLACEHOLDER_IMAGE;}} />
-            </div>
-            {(p.images && p.images.length > 1) && (
-              <div className="thumbs">
-                {p.images.map((img, idx) => {
-                  let imgSrc = null;
-                  
-                  // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
-                  if (typeof img === 'object' && img !== null) {
-                    imgSrc = img.url || img.imageUrl || img.src;
-                  } 
-                  // Handle string format
-                  else if (typeof img === 'string') {
-                    imgSrc = img;
-                  }
-                  
-                  const fullUrl = imgSrc 
-                    ? (imgSrc.startsWith('http://') || imgSrc.startsWith('https://') 
-                        ? imgSrc 
-                        : `${API_BASE_URL}${imgSrc.startsWith('/') ? imgSrc : '/' + imgSrc}`)
-                    : PLACEHOLDER_THUMB;
-                  
-                  return (
-                    <button key={idx} className="thumb-btn" onClick={() => setHero(fullUrl || PLACEHOLDER_IMAGE)}>
-                      <img 
-                        src={fullUrl || PLACEHOLDER_THUMB} 
-                        alt={typeof img === 'object' && img.alt ? img.alt : `${p.title || p.name} ${idx+1}`} 
-                        onError={(e) => { e.currentTarget.src = PLACEHOLDER_THUMB; }} 
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
           <div className="highlights-block">
-            <h3>{p.title || p.name}</h3>
-            
-            {/* Price Display */}
-            {p.price !== undefined && p.price !== null && (
-              <div className="price-display">
-                <span className="price-label">Price:</span>
-                <span className="price-value">₹{Number(p.price).toLocaleString('en-IN')}</span>
-              </div>
-            )}
+            {/* Product Name */}
+            <h1 style={{ marginBottom: '20px', fontSize: '28px', fontWeight: 'bold' }}>
+              {getProductName(p)}
+            </h1>
             
             {/* Description Display */}
-            {p.description && (
-              <div className="description-block">
-                <h4>Description</h4>
-                <p className="description-text">{p.description}</p>
+            {getProductDescription(p) && (
+              <div className="description-block" style={{ marginBottom: '30px' }}>
+                <p className="description-text" style={{ fontSize: '16px', lineHeight: '1.6', color: '#555' }}>
+                  {getProductDescription(p)}
+                </p>
               </div>
             )}
             
-            {/* Category Display */}
-            {p.category && (
-              <div className="category-display">
-                <span className="category-label">Category:</span>
-                <span className="category-value">{p.category}</span>
+            {/* Quantity Selector */}
+            <div className="quantity-selector" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <label htmlFor="quantity" style={{ fontSize: '16px', fontWeight: '500' }}>Quantity:</label>
+              <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #ddd', borderRadius: '4px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleQuantityChange(quantity - 1)}
+                  style={{
+                    padding: '8px 15px',
+                    border: 'none',
+                    backgroundColor: '#f5f5f5',
+                    cursor: quantity <= 1 ? 'not-allowed' : 'pointer',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    color: quantity <= 1 ? '#ccc' : '#333',
+                    borderRight: '1px solid #ddd'
+                  }}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  id="quantity"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value) || 1;
+                    handleQuantityChange(val);
+                  }}
+                  style={{
+                    width: '60px',
+                    padding: '8px',
+                    textAlign: 'center',
+                    border: 'none',
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => handleQuantityChange(quantity + 1)}
+                  style={{
+                    padding: '8px 15px',
+                    border: 'none',
+                    backgroundColor: '#f5f5f5',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    color: '#333',
+                    borderLeft: '1px solid #ddd'
+                  }}
+                >
+                  +
+                </button>
               </div>
-            )}
-            
-            <div className="highlight-list">
-              {(p.highlights || []).map((h, i) => (
-                <div key={i} className="highlight-item">
-                  <span className={`icon ${h.icon}`} aria-hidden="true"></span>
-                  <span className="text">{h.title}</span>
-                </div>
-              ))}
             </div>
-            <button className="btn-primary enquire-btn">Enquire Now</button>
-          </div>
+            
+            {/* Amount Display */}
+            <div className="amount-display" style={{ marginBottom: '30px' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#732f2f' }}>
+                <span style={{ fontSize: '18px', fontWeight: 'normal', marginRight: '10px' }}>Total Amount:</span>
+                <span>₹{totalAmount.toLocaleString('en-IN')}</span>
+              </div>
+              {quantity > 1 && (
+                <div style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>
+                  (₹{baseAmount.toLocaleString('en-IN')} × {quantity})
+                </div>
+              )}
+            </div>
 
-          <div className="specs-block">
-            <h3>Product Specifications</h3>
-            <ul className="spec-list">
-              <li><span>Type:</span> {p.specs?.type || '-'}</li>
-              <li><span>Metal Purity:</span> {p.specs?.purity || '-'}</li>
-              <li><span>Gross Wt:</span> {p.specs?.grossWt || '-'}</li>
-              <li><span>Net Wt:</span> {p.specs?.netWt || '-'}</li>
-              <li><span>Metal Colour:</span> {p.specs?.colour || '-'}</li>
-              <li><span>Product Type:</span> {p.specs?.productType || '-'}</li>
-              <li><span>Gender:</span> {p.specs?.gender || '-'}</li>
-              <li><span>Brand:</span> {p.specs?.brand || '-'}</li>
-            </ul>
+            {/* Add to Cart Button */}
+            <button
+              className="btn-primary"
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              style={{
+                width: '100%',
+                padding: '12px 24px',
+                fontSize: '16px',
+                fontWeight: '600',
+                marginBottom: '15px',
+                cursor: isAddingToCart ? 'not-allowed' : 'pointer',
+                opacity: isAddingToCart ? 0.7 : 1
+              }}
+            >
+              {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+            </button>
+
+            {/* Cart Message */}
+            {cartMessage && (
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '4px',
+                  backgroundColor: cartMessage.type === 'success' ? '#d4edda' : '#f8d7da',
+                  color: cartMessage.type === 'success' ? '#155724' : '#721c24',
+                  border: `1px solid ${cartMessage.type === 'success' ? '#c3e6cb' : '#f5c6cb'}`,
+                  fontSize: '14px',
+                  marginTop: '10px'
+                }}
+              >
+                {cartMessage.text}
+              </div>
+            )}
+          </div>
+          
+          {/* Right Side: Product Image */}
+          <div className="media-block">
+            <div className="hero-img">
+              <img 
+                src={getProductImagePath()} 
+                alt={getProductName(p)} 
+                onError={(e) => {
+                  e.currentTarget.src = PLACEHOLDER_IMAGE;
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

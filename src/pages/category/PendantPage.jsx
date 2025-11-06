@@ -12,6 +12,16 @@ const createPlaceholderImage = (width = 300, height = 400, text = 'Pendant') => 
 const PLACEHOLDER_PENDANT = createPlaceholderImage(300, 400, 'Pendant');
 const API_BASE_URL = 'https://amaara-ecom.onrender.com';
 
+// Static images from public/images/products folder
+// Pendant images from 1 to 27
+const STATIC_PENDANT_IMAGE_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];
+
+// Helper function to get static image path by index
+const getStaticImagePath = (index) => {
+  const imageNum = STATIC_PENDANT_IMAGE_NUMBERS[index % STATIC_PENDANT_IMAGE_NUMBERS.length];
+  return `/images/products/pendant-${imageNum}.jpg`;
+};
+
 const PendantPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -90,12 +100,19 @@ const PendantPage = () => {
   };
 
   const getProductPrice = (product) => {
-    if (product.price) return Number(product.price);
+    // Use amount from API, fallback to price
+    if (product.amount !== undefined && product.amount !== null) {
+      return Number(product.amount);
+    }
+    if (product.price !== undefined && product.price !== null) {
+      return Number(product.price);
+    }
     return 0;
   };
 
   const getProductTitle = (product) => {
-    return product.title || product.name || 'Pendant';
+    // Get name from API, fallback to title
+    return product.name || product.title || 'Pendant';
   };
 
   const getProductId = (product) => {
@@ -103,7 +120,8 @@ const PendantPage = () => {
   };
 
   const getProductDescription = (product) => {
-    return product.description || '';
+    // Get description from API
+    return product.description || product.desc || '';
   };
 
   const getProductCategory = (product) => {
@@ -233,11 +251,12 @@ const PendantPage = () => {
           </div>
         ) : (
           <div className="products-grid">
-            {products.map((product) => {
+            {products.map((product, index) => {
               const productId = getProductId(product);
-              const allImages = getAllProductImages(product);
               const description = getProductDescription(product);
               const category = getProductCategory(product);
+              // Use static image from public/images/products folder (pendant-{number}.jpg)
+              const staticImage = getStaticImagePath(index);
               
               return (
                 <Link 
@@ -248,22 +267,13 @@ const PendantPage = () => {
                 >
                   <div className="thumb">
                     <img 
-                      src={product.images && product.images.length > 0 && product.images[0].url 
-                        ? `${API_BASE_URL}${product.images[0].url}` 
-                        : PLACEHOLDER_PENDANT} 
-                      alt={product.images && product.images.length > 0 && product.images[0].alt 
-                        ? product.images[0].alt 
-                        : getProductTitle(product)}
+                      src={staticImage}
+                      alt={getProductTitle(product)}
                       className="product-image"
                       onError={(e) => {
                         e.currentTarget.src = PLACEHOLDER_PENDANT;
                       }}
                     />
-                    {allImages.length > 1 && (
-                      <div className="image-indicator">
-                        <span className="image-count">{allImages.length} images</span>
-                      </div>
-                    )}
                     {category && (
                       <div className="category-badge">
                         {category}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faHeart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,6 +11,36 @@ const Header = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
+  
+  // Check if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check if we're on the customer auth page
+  const isAuthPage = location.pathname === '/customer-auth';
+  
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = () => {
+      const userToken = sessionStorage.getItem('userToken');
+      const userId = sessionStorage.getItem('userId');
+      setIsLoggedIn(!!(userToken || userId));
+    };
+    
+    checkAuth();
+    // Listen for storage changes (when user logs in/out in another tab)
+    window.addEventListener('storage', checkAuth);
+    // Also check on location change
+    const interval = setInterval(checkAuth, 500);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      clearInterval(interval);
+    };
+  }, [location]);
+  
+  // Determine if icons should be shown
+  const shouldShowIcons = isLoggedIn && !isAuthPage;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -117,22 +147,28 @@ const Header = () => {
 
         {/* Actions - Right */}
         <div className="header-actions">
-            {/* Customer Login/Register Link */}
-            <Link to="/customer-auth" className="action-btn" aria-label="Customer Account">
-              <FontAwesomeIcon icon={faUser} />
-            </Link>
+            {/* Customer Login/Register Link - Only show if not logged in and not on auth page */}
+            {!shouldShowIcons && !isAuthPage && (
+              <Link to="/customer-auth" className="action-btn" aria-label="Customer Account">
+                <FontAwesomeIcon icon={faUser} />
+              </Link>
+            )}
 
-            {/* Wishlist */}
-            <button className="action-btn" aria-label="Wishlist">
-              <FontAwesomeIcon icon={faHeart} />
-              <span className="badge">0</span>
-            </button>
+            {/* Wishlist - Only show when logged in */}
+            {shouldShowIcons && (
+              <button className="action-btn" aria-label="Wishlist">
+                <FontAwesomeIcon icon={faHeart} />
+                <span className="badge">0</span>
+              </button>
+            )}
 
-            {/* Cart */}
-            <Link to="/cart" className="action-btn" aria-label="Cart">
-              <FontAwesomeIcon icon={faShoppingBag} />
-              <span className="badge">0</span>
-            </Link>
+            {/* Cart - Only show when logged in */}
+            {shouldShowIcons && (
+              <Link to="/cart" className="action-btn" aria-label="Cart">
+                <FontAwesomeIcon icon={faShoppingBag} />
+                <span className="badge">0</span>
+              </Link>
+            )}
 
             {/* Rate Button (hover to show rates) */}
             <div style={{position:'relative',display:'inline-block'}}>
