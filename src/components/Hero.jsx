@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import "./Hero.css";
@@ -13,6 +14,7 @@ import img6 from '../assets/images/hero/06.jpg';
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -43,7 +45,7 @@ const Hero = () => {
             // code: "UPTO 50% OFF",
             description: "Traditional designs reimagined",
             buttonText: "Explore Now",
-            url: "https://palmonas.com/collections/ganthan",
+            url: "/customer-auth",
             bgColor: "linear-gradient(135deg, #2c3e50, #4a6741)"
         },
         {
@@ -106,6 +108,21 @@ const Hero = () => {
                             {slides[currentSlide].code && <p className="offer-code">{slides[currentSlide].code}</p>}
 
                             {slides[currentSlide].description && <p className="offer-terms">{slides[currentSlide].description}</p>}
+                            
+                            {slides[currentSlide].buttonText && (
+                                <button 
+                                    className="shop-now-btn"
+                                    onClick={() => {
+                                        if (slides[currentSlide].url?.startsWith('/')) {
+                                            navigate(slides[currentSlide].url);
+                                        } else if (slides[currentSlide].url) {
+                                            window.open(slides[currentSlide].url, '_blank');
+                                        }
+                                    }}
+                                >
+                                    {slides[currentSlide].buttonText}
+                                </button>
+                            )}
                         </div>
 
                     </div>

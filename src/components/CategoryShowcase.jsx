@@ -3,20 +3,14 @@ import { Link } from 'react-router-dom';
 import './Category.css';
 
 // Import images
-import MangalsutraImg from '../assets/images/Type/newmangalsutra.webp';
 import Earring from '../assets/images/Type/newearring.webp';
-import Bracelet from '../assets/images/Type/newbracelet.webp';
 import Pendant from '../assets/images/Type/pendant.webp';
 import Necklace from '../assets/images/Type/newnecklace.webp';
-import Ring from '../assets/images/Type/newring.webp';
 
 const categories = [
   { name: 'Necklaces', image: Necklace, path: '/necklaces' },
-  { name: 'Ring', image: Ring, path: '/ring' },
   { name: 'Earring', image: Earring, path: '/earring' },
-  { name: 'Bracelet', image: Bracelet, path: '/bracelet' },
   { name: 'Pendant', image: Pendant, path: '/pendant' },
-  { name: 'Mangalsutra', image: MangalsutraImg, path: '/mangalsutra' },
 ];
 
 const CategoryShowcase = () => {

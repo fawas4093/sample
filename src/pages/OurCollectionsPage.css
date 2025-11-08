@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+.collections-page {
+  background-color: #f3eaea;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+/* Banner */
+.collections-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3eaea;
+  padding: 60px 120px;
+  text-align: center;
+}
+
+.collections-banner-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  color: #000;
+  margin: 0 0 15px 0;
+}
+
+.collections-banner-text p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+/* Content Section */
+.collections-content {
+  background-color: #fff;
+  padding: 60px 20px;
+}
+
+.collections-content .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.collections-intro {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 50px;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Collections Grid */
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.collection-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.collection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.collection-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.collection-image-wrapper {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.collection-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover .collection-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.collection-info {
+  padding: 30px 25px;
+}
+
+.collection-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: #732f2f;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+}
+
+.collection-info p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0 0 15px 0;
+}
+
+.collection-cta {
+  font-size: 14px;
+  color: #732f2f;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.collection-card:hover .collection-cta {
+  color: #8b4a4a;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .collections-banner {
+    padding: 40px 30px;
+  }
+
+  .collections-banner-text h2 {
+    font-size: 36px;
+  }
+
+  .collections-banner-text p {
+    font-size: 16px;
+  }
+
+  .collections-content {
+    padding: 40px 30px;
+  }
+
+  .collections-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .collections-intro {
+    font-size: 16px;
+  }
+}
+
+/* Product Images Grid */
+.product-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.product-image-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.product-image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-wrapper {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.product-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-image-card:hover .product-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.product-image-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.product-image-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: #732f2f;
+  margin: 0;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .collections-banner-text h2 {
+    font-size: 32px;
+  }
+
+  .collections-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .collection-image-wrapper {
+    height: 250px;
+  }
+
+  .collection-info {
+    padding: 25px 20px;
+  }
+
+  .collection-info h3 {
+    font-size: 22px;
+  }
+
+  .collection-info p {
+    font-size: 15px;
+  }
+
+  .product-images-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .product-image-wrapper {
+    height: 250px;
+  }
+
+  .product-image-info h3 {
+    font-size: 18px;
+  }
+}
+
