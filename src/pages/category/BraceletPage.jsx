@@ -39,56 +39,6 @@ const BraceletPage = () => {
     fetchProducts();
   }, []);
 
-  const getProductImage = (product) => {
-    // Check for images array first (backend format: images[{url, alt, _id}])
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      const firstImage = product.images[0];
-      let imageUrl = null;
-      
-      // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
-      if (typeof firstImage === 'object' && firstImage !== null) {
-        imageUrl = firstImage.url || firstImage.imageUrl || firstImage.src;
-      } 
-      // Handle string format (fallback)
-      else if (typeof firstImage === 'string') {
-        imageUrl = firstImage;
-      }
-      
-      if (imageUrl) {
-        // If URL starts with http/https, use as-is
-        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-          return imageUrl;
-        }
-        // If URL starts with /, prefix with API_BASE_URL
-        if (imageUrl.startsWith('/')) {
-          return `${API_BASE_URL}${imageUrl}`;
-        }
-        // Otherwise, prefix with API_BASE_URL and ensure leading /
-        return `${API_BASE_URL}/${imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl}`;
-      }
-    }
-    
-    // Check for imageUrl (fallback)
-    if (product.imageUrl) {
-      const imageUrl = product.imageUrl;
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        return imageUrl;
-      }
-      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
-    }
-    
-    // Check for single image string (fallback)
-    if (product.image) {
-      const imageUrl = product.image;
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        return imageUrl;
-      }
-      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
-    }
-    
-    return PLACEHOLDER_BRACELET;
-  };
-
   const getProductPrice = (product) => {
     if (product.price) return Number(product.price);
     return 0;
@@ -108,18 +58,6 @@ const BraceletPage = () => {
 
   const getProductCategory = (product) => {
     return product.category || '';
-  };
-
-  const getProductImageAlt = (product) => {
-    // Check if images array has alt text
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      const firstImage = product.images[0];
-      if (typeof firstImage === 'object' && firstImage !== null && firstImage.alt) {
-        return firstImage.alt;
-      }
-    }
-    // Fallback to product title
-    return getProductTitle(product);
   };
 
   const getAllProductImages = (product) => {

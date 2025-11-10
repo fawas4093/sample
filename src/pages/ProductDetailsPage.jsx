@@ -11,7 +11,6 @@ const createPlaceholderImage = (width = 800, height = 600, text = 'Image') => {
 
 // Placeholder images (created once, reused)
 const PLACEHOLDER_IMAGE = createPlaceholderImage(800, 600, 'Image');
-const PLACEHOLDER_THUMB = createPlaceholderImage(120, 120, 'NA');
 const API_BASE_URL = 'https://amaara-ecom.onrender.com';
 
 // Product detail image from public/images/products folder
@@ -21,65 +20,13 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const [p, setP] = useState(location.state?.product || null);
-  const [hero, setHero] = useState(PLACEHOLDER_IMAGE); // Initialize with placeholder instead of empty string
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [cartMessage, setCartMessage] = useState(null);
 
-  const getProductImageUrl = (product) => {
-    // Check for images array first (backend format: images[{url, alt, _id}])
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      const firstImage = product.images[0];
-      let imageUrl = null;
-      
-      // Handle object format: {url: "/public/images/...", alt: "...", _id: "..."}
-      if (typeof firstImage === 'object' && firstImage !== null) {
-        imageUrl = firstImage.url || firstImage.imageUrl || firstImage.src;
-      } 
-      // Handle string format (fallback)
-      else if (typeof firstImage === 'string') {
-        imageUrl = firstImage;
-      }
-      
-      if (imageUrl) {
-        // If URL starts with http/https, use as-is
-        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-          return imageUrl;
-        }
-        // If URL starts with /, prefix with API_BASE_URL
-        if (imageUrl.startsWith('/')) {
-          return `${API_BASE_URL}${imageUrl}`;
-        }
-        // Otherwise, prefix with API_BASE_URL and ensure leading /
-        return `${API_BASE_URL}/${imageUrl.startsWith('/') ? imageUrl.slice(1) : imageUrl}`;
-      }
-    }
-    
-    // Check for imageUrl (fallback)
-    if (product.imageUrl) {
-      const imageUrl = product.imageUrl;
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        return imageUrl;
-      }
-      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
-    }
-    
-    // Check for single image string (fallback)
-    if (product.image) {
-      const imageUrl = product.image;
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        return imageUrl;
-      }
-      return imageUrl.startsWith('/') ? `${API_BASE_URL}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
-    }
-    
-    return PLACEHOLDER_IMAGE;
-  };
-
   useEffect(() => {
     if (location.state?.product) {
       setP(location.state.product);
-      setHero(getProductImageUrl(location.state.product));
     } else {
       const load = async () => {
         try {
@@ -97,7 +44,6 @@ const ProductDetailsPage = () => {
           }
           const prod = res.data;
           setP(prod);
-          setHero(getProductImageUrl(prod));
         } catch (err) {
           console.error('Error loading product:', err);
           // Keep placeholder image
