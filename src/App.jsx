@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import TopBanner from './components/TopBanner';
 import Header from './components/Header';
@@ -29,17 +29,18 @@ import Cart from './pages/Cart';
 
 import './App.css';
 
-// Protected Home component - redirects to login if not authenticated
+// Home component - shows collections page if not logged in, home content if logged in
 const Home = () => {
   // Check authentication status
   const userId = sessionStorage.getItem('userId');
   const userToken = sessionStorage.getItem('userToken');
   
-  // If not logged in, redirect to customer-auth
+  // If not logged in, show collections page
   if (!userId && !userToken) {
-    return <Navigate to="/customer-auth" replace />;
+    return <OurCollectionsPage />;
   }
 
+  // If logged in, show home content
   return (
     <>
       <Hero />

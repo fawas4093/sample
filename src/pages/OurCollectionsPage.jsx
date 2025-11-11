@@ -20,6 +20,12 @@ const OurCollectionsPage = () => {
 
   return (
     <div className="collections-page">
+      <section className="collections-banner">
+        <div className="collections-banner-text">
+          <h2>Welcome to Amaara Collections</h2>
+        </div>
+      </section>
+
       <section className="collections-content">
         <div className="container">
           <div className="product-images-grid">
