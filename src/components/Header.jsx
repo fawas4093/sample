@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faHeart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
@@ -10,7 +10,6 @@ const Header = () => {
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   
   // Check if user is logged in
@@ -42,14 +41,7 @@ const Header = () => {
   // Determine if icons should be shown
   const shouldShowIcons = isLoggedIn && !isAuthPage;
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const searchSuggestions = [
+  const searchSuggestions = useMemo(() => [
     'Search for mangalsutra...',
     'Search for ganthan...',
     'Search for necklaces...',
@@ -60,7 +52,7 @@ const Header = () => {
     'Search for pendants...',
     'Search for bracelets...',
     'Search for nose pins...'
-  ];
+  ], []);
 
   useEffect(() => {
     const currentSuggestion = searchSuggestions[currentSuggestionIndex];

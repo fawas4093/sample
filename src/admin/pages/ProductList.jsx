@@ -1,5 +1,5 @@
 // src/admin/pages/ProductList.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import http from '../../api/http';
 import { useAdminAxios } from '../utils/axiosAdmin';
 import { useAdminAuth } from '../auth/AdminAuthContext';
@@ -12,13 +12,13 @@ const ProductList = () => {
   const { logout } = useAdminAuth();
   const navigate = useNavigate();
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const res = await http.get('/api/products', { params: { q, page: 0, size: 50, sort: 'title,asc' } });
     const content = res.data?.content ?? res.data;
     setItems(Array.isArray(content) ? content : []);
-  };
+  }, [q]);
 
-  useEffect(() => { load(); }, [q]);
+  useEffect(() => { load(); }, [load]);
 
   const savePrice = async (id, price) => {
     if (price === '' || Number(price) < 0) return;

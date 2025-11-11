@@ -1,6 +1,6 @@
 // src/pages/CustomerAuth.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../admin/pages/login.css';
 
@@ -12,8 +12,6 @@ const CustomerAuth = ({ mode = 'login' }) => {
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const redirectTo = location.state?.from || '/';
 
   const resetFields = () => {
     setPassword('');
