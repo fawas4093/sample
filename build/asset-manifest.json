@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2b25f8e5.css",
+    "main.js": "/static/js/main.f8c57019.js",
+    "static/js/453.4fa84433.chunk.js": "/static/js/453.4fa84433.chunk.js",
+    "static/media/video3.mp4": "/static/media/video3.5bce3d3fb7fdcaa4dfbe.mp4",
+    "static/media/video2.mp4": "/static/media/video2.b50a9453c04c6b4938ad.mp4",
+    "static/media/video1.mp4": "/static/media/video1.9ea4a599c0c53256b473.mp4",
+    "static/media/06.jpg": "/static/media/06.19789f864f791236303f.jpg",
+    "static/media/03.jpg": "/static/media/03.7b5d040177492567c48c.jpg",
+    "static/media/05.jpg": "/static/media/05.3339eaf479fb8bd2b8f1.jpg",
+    "static/media/04.jpg": "/static/media/04.109cb2563ec246d43776.jpg",
+    "static/media/01.jpg": "/static/media/01.df319e082bcaf4081c7d.jpg",
+    "static/media/02.jpg": "/static/media/02.9406d726f1576a3e8a9f.jpg",
+    "static/media/newnecklace.webp": "/static/media/newnecklace.616b1ce4b8cf2b61f850.webp",
+    "static/media/pendant.webp": "/static/media/pendant.e5f3b5cabe9364a1291f.webp",
+    "static/media/store.avif": "/static/media/store.ce6c2d7b92be108a08e1.avif",
+    "static/media/newearring.webp": "/static/media/newearring.a32fdbeff17f2ffe4de3.webp",
+    "index.html": "/index.html",
+    "main.2b25f8e5.css.map": "/static/css/main.2b25f8e5.css.map",
+    "main.f8c57019.js.map": "/static/js/main.f8c57019.js.map",
+    "453.4fa84433.chunk.js.map": "/static/js/453.4fa84433.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2b25f8e5.css",
+    "static/js/main.f8c57019.js"
+  ]
+}
