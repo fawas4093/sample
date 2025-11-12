@@ -1,38 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 const Navigation = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {
-        const checkAuth = () => {
-            const userId = sessionStorage.getItem('userId');
-            const userToken = sessionStorage.getItem('userToken');
-            setIsLoggedIn(!!(userId && userToken));
-        };
-
-        checkAuth();
-        // Check auth status periodically to catch login/logout events
-        const interval = setInterval(checkAuth, 500);
-        
-        // Also listen to storage events for cross-tab updates
-        window.addEventListener('storage', checkAuth);
-
-        return () => {
-            clearInterval(interval);
-            window.removeEventListener('storage', checkAuth);
-        };
-    }, []);
-
-    const allNavItems = [
+    const navItems = [
         { name: 'Contact', href: '#' },
-        { name: 'About Us', href: '/about-us' },
-        { name: 'Our Collections', href: '/our-collections' }
+        { name: 'About Us', href: '/about-us' }
     ];
-
-    // Filter out 'Our Collections' if user is logged in
-    const navItems = isLoggedIn 
-        ? allNavItems.filter(item => item.name !== 'Our Collections')
-        : allNavItems;
 
     return (
         <nav className="main-nav">

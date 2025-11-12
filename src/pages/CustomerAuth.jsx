@@ -1,6 +1,6 @@
 // src/pages/CustomerAuth.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../admin/pages/login.css';
 
@@ -12,6 +12,8 @@ const CustomerAuth = ({ mode = 'login' }) => {
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from || '/';
 
   const resetFields = () => {
     setPassword('');
@@ -38,11 +40,19 @@ const CustomerAuth = ({ mode = 'login' }) => {
         const userId = data.user?.id || data.user?._id || data.id || data.userId || data.user?.userId;
         if (userId) {
           sessionStorage.setItem('userId', userId.toString());
-          // Redirect to home page with user ID in URL
-          navigate(`/?userId=${userId}`, { replace: true });
+          // Redirect to intended page or home page with user ID in URL
+          if (redirectTo && redirectTo !== '/') {
+            navigate(redirectTo, { replace: true });
+          } else {
+            navigate(`/?userId=${userId}`, { replace: true });
+          }
         } else {
-          // If no user ID found, redirect without it
-          navigate('/', { replace: true });
+          // If no user ID found, redirect to intended page or home
+          if (redirectTo && redirectTo !== '/') {
+            navigate(redirectTo, { replace: true });
+          } else {
+            navigate('/', { replace: true });
+          }
         }
       } else {
         await axios.post('https://amaara-ecom.onrender.com/api/user/register', { name, email, password });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './EarringPage.css';
 
@@ -44,6 +44,24 @@ const EarringPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleViewDetails = (e, productId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Check authentication status
+    const userId = sessionStorage.getItem('userId');
+    const userToken = sessionStorage.getItem('userToken');
+    
+    // If not authenticated, redirect to customer auth page with product path in state
+    if (!userId && !userToken) {
+      navigate('/customer-auth', { state: { from: `/product/${productId}` } });
+    } else {
+      // If authenticated, navigate to product page
+      navigate(`/product/${productId}`);
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -148,7 +166,12 @@ const EarringPage = () => {
                     <div className="meta">
                       <span className="price">₹{productPrice.toLocaleString('en-IN')}</span>
                     </div>
-                    <button className="btn-primary">View Details</button>
+                    <button 
+                      className="btn-primary"
+                      onClick={(e) => handleViewDetails(e, productId)}
+                    >
+                      View Details
+                    </button>
                   </div>
                 </Link>
               );

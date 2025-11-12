@@ -4,10 +4,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import TopBanner from './components/TopBanner';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
-import Hero from './components/Hero';
-import CategoryShowcase from './components/CategoryShowcase';
-import VideoCardsSection from "./components/VideoCardsSection";
-import CustomJewellery from './components/CustomJewellery';
 
 import ProductDetailsPage from './pages/ProductDetailsPage';
 
@@ -20,37 +16,14 @@ import EarringPage from './pages/category/EarringPage.jsx';
 import BraceletPage from './pages/category/BraceletPage.jsx';
 import PendantPage from './pages/category/PendantPage.jsx';
 import MangalsutraPage from './pages/category/MangalsutraPage.jsx';
-import StoreLocator from './components/StoreLocator.jsx';
 import StoresPage from './pages/StoresPage.jsx';
 import AboutUsPage from './pages/AboutUsPage.jsx';
-import OurCollectionsPage from './pages/OurCollectionsPage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 import CustomerAuth from './pages/CustomerAuth';
 import Cart from './pages/Cart';
 
 import './App.css';
 
-// Home component - shows collections page if not logged in, home content if logged in
-const Home = () => {
-  // Check authentication status
-  const userId = sessionStorage.getItem('userId');
-  const userToken = sessionStorage.getItem('userToken');
-  
-  // If not logged in, show collections page
-  if (!userId && !userToken) {
-    return <OurCollectionsPage />;
-  }
-
-  // If logged in, show home content
-  return (
-    <>
-      <Hero />
-      <CategoryShowcase />
-      <VideoCardsSection />
-      <CustomJewellery /> 
-      <StoreLocator/>
-    </>
-  );
-};
 
 function App() {
   return (
@@ -60,7 +33,7 @@ function App() {
       <Navigation />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/customer-auth" element={<CustomerAuth mode="login" />} />
         <Route path="/customer-register" element={<CustomerAuth mode="register" />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
@@ -76,7 +49,7 @@ function App() {
          {/* ✅ Add this route for your new store page */}
         <Route path="/stores" element={<StoresPage />} />
         <Route path="/about-us" element={<AboutUsPage />} />
-        <Route path="/our-collections" element={<OurCollectionsPage />} />
+        <Route path="/landing" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>
   );

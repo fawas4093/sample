@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.a4bfd10c.css",
-    "main.js": "/static/js/main.3f91694b.js",
+    "main.css": "/static/css/main.27682d60.css",
+    "main.js": "/static/js/main.c64bd643.js",
     "static/js/453.4fa84433.chunk.js": "/static/js/453.4fa84433.chunk.js",
     "static/media/video3.mp4": "/static/media/video3.5bce3d3fb7fdcaa4dfbe.mp4",
     "static/media/video2.mp4": "/static/media/video2.b50a9453c04c6b4938ad.mp4",
@@ -17,12 +17,12 @@
     "static/media/store.avif": "/static/media/store.ce6c2d7b92be108a08e1.avif",
     "static/media/newearring.webp": "/static/media/newearring.a32fdbeff17f2ffe4de3.webp",
     "index.html": "/index.html",
-    "main.a4bfd10c.css.map": "/static/css/main.a4bfd10c.css.map",
-    "main.3f91694b.js.map": "/static/js/main.3f91694b.js.map",
+    "main.27682d60.css.map": "/static/css/main.27682d60.css.map",
+    "main.c64bd643.js.map": "/static/js/main.c64bd643.js.map",
     "453.4fa84433.chunk.js.map": "/static/js/453.4fa84433.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a4bfd10c.css",
-    "static/js/main.3f91694b.js"
+    "static/css/main.27682d60.css",
+    "static/js/main.c64bd643.js"
   ]
 }
